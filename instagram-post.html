@@ -116,32 +116,29 @@
           ajaxResponse: {
             type: Object
           },
-          postId: {
+          postid: {
             type: String
           },
           imgSrc: {
-            type: String,
-            value: "https://instagram.ffco3-1.fna.fbcdn.net/vp/6fc323037a146ade28406f9db20f7953/5B05A23C/t51.2885-15/sh0.08/e35/p640x640/26870368_796044567270376_6365252699310522368_n.jpg"
+            type: String
           },
           instagramUrl: {
             type: String,
-            value: "https://www.instagram.com/p/BeODl5BhOeW/"
+            computed: '_buildUrl(postid)',
+            observer: '_getInstagramAPI'
           },
           authorUrl: {
             type: String,
             value: "https://www.instagram.com/canadiansroam/"
           },
           authorName: {
-            type: String,
-            value: "Canadians Roam"
+            type: String
           },
           authorId: {
             type: String
           },
           instagramText: {
-            type: String,
-            notify: true,
-            observer: '_test'
+            type: String
           },
           loaded: {
             type: Boolean,
@@ -149,27 +146,31 @@
           }
         };
       }
-      _test(newInstagramText) {
-        console.log(newInstagramText);
-      }
-      reqListener (response) {
-        console.log(response.target);
-        if (response.target.status == '200') {
-          let responseObj = JSON.parse(response.target.response);
-          this.set('instagramText', responseObj.title);
-          console.log(this.instagramText);
-        }
 
-      }
-      connectedCallback() {
-        super.connectedCallback();
+      _getInstagramAPI(instagramUrl) {
         var xhr = new XMLHttpRequest();
         xhr.addEventListener("load", (e) => {
-          console.log(e);
-          //this.set('loaded', true)
+          console.log(e.target);
+          if (e.target.status == 200) {
+            let responseObj = JSON.parse(e.target.response);
+            this.set('instagramText', responseObj.title);
+            this.set('imgSrc', responseObj.thumbnail_url);
+            this.set('authorId', responseObj.author_name);
+            this.set('authorUrl', responseObj.author_url);
+
+            this.set('loaded', true);
+          }
         });
-        xhr.open("GET", "https://cors.io/?https://api.instagram.com/oembed/?url=https://www.instagram.com/p/BeODl5BhOeW");
+        xhr.open("GET", "https://cors.io/?https://api.instagram.com/oembed/?url=" + this.instagramUrl);
         xhr.send();
+      }
+
+      _buildUrl(postid) {
+        return 'https://www.instagram.com/p/' + postid;
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
       }
     }
 
