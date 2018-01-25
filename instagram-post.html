@@ -1,0 +1,178 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-post">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .instagram-media {
+        background:#FFF;
+        border:0;
+        border-radius:3px;
+        box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
+        margin: 1px;
+        max-width:658px;
+        padding:0;
+        width:99.375%;
+        width:-webkit-calc(100% - 2px);
+        width:calc(100% - 2px);
+      }
+      .instagram-image {
+        margin-top:40px;
+        width:100%;
+      }
+      .instagram-temp {
+        background:#F8F8F8;
+        line-height:0;
+        margin-top:40px;
+        padding:62.5% 0;
+        text-align:center;
+        width:100%;
+      }
+      .instagram-logo {
+        background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAMUExURczMzPf399fX1+bm5mzY9AMAAADiSURBVDjLvZXbEsMgCES5/P8/t9FuRVCRmU73JWlzosgSIIZURCjo/ad+EQJJB4Hv8BFt+IDpQoCx1wjOSBFhh2XssxEIYn3ulI/6MNReE07UIWJEv8UEOWDS88LY97kqyTliJKKtuYBbruAyVh5wOHiXmpi5we58Ek028czwyuQdLKPG1Bkb4NnM+VeAnfHqn1k4+GPT6uGQcvu2h2OVuIf/gWUFyy8OWEpdyZSa3aVCqpVoVvzZZ2VTnn2wU8qzVjDDetO90GSy9mVLqtgYSy231MxrY6I2gGqjrTY0L8fxCxfCBbhWrsYYAAAAAElFTkSuQmCC);
+        display:block;
+        height:44px;
+        margin:0 auto -44px;
+        position:relative;
+        top:-22px;
+        width:44px;
+      }
+      .instagram-textbox {
+        margin:8px 0 0 0;
+        padding:0 4px;
+      }
+      .instagram-text {
+        color:#000;
+        font-family:Arial,sans-serif;
+        font-size:14px;
+        font-style:normal;
+        font-weight:normal;
+        line-height:17px;
+        text-decoration:none;
+        word-wrap:break-word;
+      }
+      .instagram-authorbox {
+        color:#c9c8cd;
+        font-family:Arial,sans-serif;
+        font-size:14px;
+        line-height:17px;
+        margin-bottom:0;
+        margin-top:8px;
+        overflow:hidden;
+        padding:8px 0 7px;
+        text-align:center;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+      .instagram-author {
+        color:#c9c8cd;
+        font-family:Arial,sans-serif;
+        font-size:14px;
+        font-style:normal;
+        font-weight:normal;
+        line-height:17px;
+      }
+      .instagram-time {
+        font-family:Arial,sans-serif;
+        font-size:14px;
+        line-height:17px;
+      }
+    </style>
+
+    <blockquote class="instagram-media">
+      <div class="instagram-header">
+      </div>
+      <div style="padding:8px;">
+        <a href$=[[instagramUrl]]>
+          <img class="instagram-image"  hidden$=[[!loaded]] src$=[[imgSrc]]>
+        </a>
+        <div class="instagram-temp" hidden$=[[loaded]]>
+          <div class="instagram-logo"></div>
+        </div>
+        <p class="instagram-textbox">
+          <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
+        </p>
+        <p class="instagram-authorbox">A post shared by <a href$=[[authorUrl]] class="instagram-author" target="_blank"> [[authorName]]</a> (@[[authorId]]) on <time class="instagram-time" datetime="2018-01-21T17:18:49+00:00">Jan 21, 2018 at 9:18am PST</time>
+        </p>
+        </div>
+      </blockquote>
+  </template>
+
+  <script>
+    /**
+     * `instagram-post`
+     * Display an Instagram post in your Polymer website
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class InstagramPost extends Polymer.Element {
+      static get is() { return 'instagram-post'; }
+      static get properties() {
+        return {
+          ajaxResponse: {
+            type: Object
+          },
+          postId: {
+            type: String
+          },
+          imgSrc: {
+            type: String,
+            value: "https://instagram.ffco3-1.fna.fbcdn.net/vp/6fc323037a146ade28406f9db20f7953/5B05A23C/t51.2885-15/sh0.08/e35/p640x640/26870368_796044567270376_6365252699310522368_n.jpg"
+          },
+          instagramUrl: {
+            type: String,
+            value: "https://www.instagram.com/p/BeODl5BhOeW/"
+          },
+          authorUrl: {
+            type: String,
+            value: "https://www.instagram.com/canadiansroam/"
+          },
+          authorName: {
+            type: String,
+            value: "Canadians Roam"
+          },
+          authorId: {
+            type: String
+          },
+          instagramText: {
+            type: String,
+            notify: true,
+            observer: '_test'
+          },
+          loaded: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+      _test(newInstagramText) {
+        console.log(newInstagramText);
+      }
+      reqListener (response) {
+        console.log(response.target);
+        if (response.target.status == '200') {
+          let responseObj = JSON.parse(response.target.response);
+          this.set('instagramText', responseObj.title);
+          console.log(this.instagramText);
+        }
+
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("load", (e) => {
+          console.log(e);
+          //this.set('loaded', true)
+        });
+        xhr.open("GET", "https://cors.io/?https://api.instagram.com/oembed/?url=https://www.instagram.com/p/BeODl5BhOeW");
+        xhr.send();
+      }
+    }
+
+    window.customElements.define(InstagramPost.is, InstagramPost);
+  </script>
+</dom-module>
