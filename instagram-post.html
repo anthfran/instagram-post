@@ -180,7 +180,7 @@
         </p>
       </div>
       <div class="instagram-footer">
-        <a class="instagram-time gray" href="#">40 days ago</a>
+        <a class="instagram-time gray" href="#">[[humanDate]]</a>
         <span class="instagram-glyph"></span>
       </div>
       </blockquote>
@@ -258,7 +258,14 @@
       }
 
       _computeHumanDate(timestamp) {
-        return new Date(timestamp*1000);
+        let postDate = new Date(timestamp*1000);
+        let elapsedTime = new Date() - postDate
+        if ( elapsedTime < 84400000*7) {
+          return Math.round(elapsedTime/84400000) + " days ago"
+        } else {
+          var options = { year: 'numeric', month: 'long', day: 'numeric' };
+          return postDate.toLocaleDateString("en-US",options)
+        }
       }
 
       _getInstagramAPI(instagramUrl) {
