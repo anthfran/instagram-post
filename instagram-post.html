@@ -113,6 +113,9 @@
       .bolded {
         font-weight: 600;
       }
+      .gray {
+        color: #999;
+      }
     </style>
 
     <blockquote class="instagram-post">
@@ -138,6 +141,9 @@
         </p>
         <p class="instagram-textbox">
           <a href$=[[authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
+        </p>
+        <p class="instagram-textbox">
+          <a class="instagram-text gray" href$=[[instagramUrl]] target="_blank">view all [[comments]] comments</a>
         </p>
         </div>
       </blockquote>
@@ -189,6 +195,9 @@
           likes: {
             type: String
           },
+          comments: {
+            type: String
+          },
           timestamp: {
             type: Number
           },
@@ -226,6 +235,7 @@
             this.set('timestamp', graphql.taken_at_timestamp);
             this.set('authorAvatar', graphql.owner.profile_pic_url);
             this.set('likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+            this.set('comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('loaded', true);
           }
         });
