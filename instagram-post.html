@@ -106,15 +106,49 @@
         line-height:17px;
       }
       .instagram-time {
-        font-family:Arial,sans-serif;
-        font-size:14px;
+        display: inline-block;
+        font-size:12px;
+        text-decoration: none;
         line-height:17px;
+      }
+      .instagram-glyph {
+        display: inline-block;
+        float: right;
+        -webkit-box-align:center;
+        -webkit-align-items:center;
+        -ms-flex-align:center;
+        align-items:center;
+        vertical-align: middle;
+        height: 24px;
+        width: 26px;
+        overflow: hidden;
+        background-position: -24px 0px;
+        background-image: url(https://www.instagram.com/static/bundles/sprite_embednew_2x.png/f8cfa266e12d.png);
+        background-size: 74px 49px;
       }
       .bolded {
         font-weight: 600;
       }
       .gray {
         color: #999;
+      }
+      .instagram-textcontent {
+        padding-bottom: 10px;
+      }
+      .instagram-footer {
+        vertical-align: middle;
+        -webkit-box-align:center;
+        -webkit-align-items:center;
+        -ms-flex-align:center;
+        align-items:center;
+        border-top:1px solid #eee;
+        -webkit-box-orient:horizontal;
+        -webkit-box-direction:normal;
+        -webkit-flex-direction:row;
+        -ms-flex-direction:row;
+        flex-direction:row;
+        height:24px;
+        padding:10px
       }
     </style>
 
@@ -129,23 +163,27 @@
         <span class="instagram-verified">
         </span>
       </div>
-      <div>
+      <div class="instagram-textcontent">
         <a href$=[[instagramUrl]]>
           <img class="instagram-image"  hidden$=[[!loaded]] src$=[[imgSrc]]>
         </a>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
         </div>
-        <p class="instagram-textbox">
+        <p class="instagram-textbox" hidden$=[[!loaded]]>
           <a class="instagram-text bolded" href$=[[instagramUrl]] target="_blank">[[likes]] likes</a>
         </p>
-        <p class="instagram-textbox">
+        <p class="instagram-textbox" hidden$=[[!loaded]]>
           <a href$=[[authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
         </p>
-        <p class="instagram-textbox">
+        <p class="instagram-textbox" hidden$=[[!loaded]]>
           <a class="instagram-text gray" href$=[[instagramUrl]] target="_blank">view all [[comments]] comments</a>
         </p>
-        </div>
+      </div>
+      <div class="instagram-footer">
+        <a class="instagram-time gray" href="#">40 days ago</a>
+        <span class="instagram-glyph"></span>
+      </div>
       </blockquote>
   </template>
 
@@ -204,6 +242,10 @@
           humanDate: {
             type: String,
             computed: '_computeHumanDate(timestamp)'
+          },
+          verified: {
+            type: Boolean,
+            value: false
           },
           loaded: {
             type: Boolean,
