@@ -6,7 +6,7 @@
       :host {
         display: block;
       }
-      .instagram-media {
+      .instagram-post {
         background:#FFF;
         border:0;
         border-radius:3px;
@@ -18,14 +18,59 @@
         width:-webkit-calc(100% - 2px);
         width:calc(100% - 2px);
       }
+      .instagram-header {
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        height: 34px;
+        padding: 10px;
+      }
+      .instagram-avatar img{
+        border-radius: 50%;
+        height: 30px;
+      }
+      .instagram-username {
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+        display: -webkit-box;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        font-weight: 600;
+        color: #262626;
+        text-decoration: none;
+        padding: 0 10px;
+      }
+      .instagram-verified {
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        overflow: hidden;
+        background-position: -50px -25px;
+        background-image: url(https://www.instagram.com/static/bundles/sprite_embednew_2x.png/f8cfa266e12d.png);
+        background-size: 74px 49px;
+      }
       .instagram-image {
-        margin-top:40px;
         width:100%;
       }
       .instagram-temp {
         background:#F8F8F8;
         line-height:0;
-        margin-top:40px;
         padding:62.5% 0;
         text-align:center;
         width:100%;
@@ -41,7 +86,7 @@
       }
       .instagram-textbox {
         margin:8px 0 0 0;
-        padding:0 4px;
+        padding:0 10px;
       }
       .instagram-text {
         color:#000;
@@ -53,25 +98,12 @@
         text-decoration:none;
         word-wrap:break-word;
       }
-      .instagram-authorbox {
-        color:#c9c8cd;
-        font-family:Arial,sans-serif;
-        font-size:14px;
-        line-height:17px;
-        margin-bottom:0;
-        margin-top:8px;
-        overflow:hidden;
-        padding:8px 0 7px;
-        text-align:center;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-      }
       .instagram-author {
-        color:#c9c8cd;
+        color:#262626;
         font-family:Arial,sans-serif;
         font-size:14px;
+        font-weight: 600;
         font-style:normal;
-        font-weight:normal;
         line-height:17px;
       }
       .instagram-time {
@@ -81,10 +113,18 @@
       }
     </style>
 
-    <blockquote class="instagram-media">
+    <blockquote class="instagram-post">
       <div class="instagram-header">
+        <a class="instagram-avatar" href$=[[authorUrl]] target="_blank">
+          <img src$=[[authorAvatar]] alt$=[[authorId]]>
+        </a>
+        <a class="instagram-username" href$=[[authorUrl]] target="_blank">
+          [[authorId]]
+        </a>
+        <span class="instagram-verified">
+        </span>
       </div>
-      <div style="padding:8px;">
+      <div>
         <a href$=[[instagramUrl]]>
           <img class="instagram-image"  hidden$=[[!loaded]] src$=[[imgSrc]]>
         </a>
@@ -92,9 +132,7 @@
           <div class="instagram-logo"></div>
         </div>
         <p class="instagram-textbox">
-          <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
-        </p>
-        <p class="instagram-authorbox">A post shared by <a href$=[[authorUrl]] class="instagram-author" target="_blank"> [[authorName]]</a> (@[[authorId]]) on <time class="instagram-time" datetime="2018-01-21T17:18:49+00:00">[[humanDate]]</time>
+          <a href$=[[authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
         </p>
         </div>
       </blockquote>
@@ -137,8 +175,14 @@
           authorId: {
             type: String
           },
+          authorAvatar: {
+            type: String
+          },
           instagramText: {
             type: String
+          },
+          likes: {
+            type: Number
           },
           timestamp: {
             type: Number
@@ -175,6 +219,7 @@
             this.set('authorId', graphql.owner.username);
             this.set('authorName', graphql.owner.full_name);
             this.set('timestamp', graphql.taken_at_timestamp);
+            this.set('authorAvatar', graphql.owner.profile_pic_url);
             this.set('loaded', true);
           }
         });
