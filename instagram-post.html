@@ -94,7 +94,7 @@
         <p class="instagram-textbox">
           <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[instagramText]]</a>
         </p>
-        <p class="instagram-authorbox">A post shared by <a href$=[[authorUrl]] class="instagram-author" target="_blank"> [[authorName]]</a> (@[[authorId]]) on <time class="instagram-time" datetime="2018-01-21T17:18:49+00:00">Jan 21, 2018 at 9:18am PST</time>
+        <p class="instagram-authorbox">A post shared by <a href$=[[authorUrl]] class="instagram-author" target="_blank"> [[authorName]]</a> (@[[authorId]]) on <time class="instagram-time" datetime="2018-01-21T17:18:49+00:00">[[humanDate]]</time>
         </p>
         </div>
       </blockquote>
@@ -128,7 +128,8 @@
             observer: '_getInstagramAPI'
           },
           authorUrl: {
-            type: String
+            type: String,
+            computed: '_computeAuthorUrl(authorId)'
           },
           authorName: {
             type: String
@@ -139,11 +140,26 @@
           instagramText: {
             type: String
           },
+          timestamp: {
+            type: Number
+          },
+          humanDate: {
+            type: String,
+            computed: '_computeHumanDate(timestamp)'
+          },
           loaded: {
             type: Boolean,
             value: false
           }
         };
+      }
+
+      _computeAuthorUrl(authorId) {
+        return 'https://www.instagram.com/' + authorId;
+      }
+
+      _computeHumanDate(timestamp) {
+        return new Date(timestamp*1000);
       }
 
       _getInstagramAPI(instagramUrl) {
@@ -152,15 +168,18 @@
           console.log(e.target);
           if (e.target.status == 200) {
             let responseObj = JSON.parse(e.target.response);
-            this.set('instagramText', responseObj.title);
-            this.set('imgSrc', responseObj.thumbnail_url);
-            this.set('authorId', responseObj.author_name);
-            this.set('authorUrl', responseObj.author_url);
-
+            let graphql = responseObj.graphql.shortcode_media;
+            console.log(responseObj);
+            this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
+            this.set('imgSrc', graphql.display_url);
+            this.set('authorId', graphql.owner.username);
+            this.set('authorName', graphql.owner.full_name);
+            this.set('timestamp', graphql.taken_at_timestamp);
             this.set('loaded', true);
           }
         });
-        xhr.open("GET", "https://cors.io/?https://api.instagram.com/oembed/?url=" + this.instagramUrl);
+        console.log(this.instagramUrl + "/?__a=1");
+        xhr.open("GET", "https://cors.io/?" + this.instagramUrl + "/?__a=1");
         xhr.send();
       }
 
