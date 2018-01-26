@@ -57,7 +57,6 @@
         padding: 0 10px;
       }
       .instagram-verified {
-        display: inline-block;
         height: 12px;
         width: 12px;
         overflow: hidden;
@@ -160,12 +159,12 @@
         <a class="instagram-username" href$=[[authorUrl]] target="_blank">
           [[authorId]]
         </a>
-        <span class="instagram-verified">
+        <span class="instagram-verified" hidden$=[[!verified]]>
         </span>
       </div>
       <div class="instagram-textcontent">
         <a href$=[[instagramUrl]]>
-          <img class="instagram-image"  hidden$=[[!loaded]] src$=[[imgSrc]]>
+          <img class="instagram-image" hidden$=[[!loaded]] src$=[[imgSrc]]>
         </a>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
@@ -245,7 +244,7 @@
           },
           verified: {
             type: Boolean,
-            value: false
+            value: true
           },
           loaded: {
             type: Boolean,
@@ -270,14 +269,16 @@
             let responseObj = JSON.parse(e.target.response);
             let graphql = responseObj.graphql.shortcode_media;
             console.log(responseObj);
-            this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('imgSrc', graphql.display_url);
+            this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('authorId', graphql.owner.username);
             this.set('authorName', graphql.owner.full_name);
             this.set('timestamp', graphql.taken_at_timestamp);
             this.set('authorAvatar', graphql.owner.profile_pic_url);
             this.set('likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+            this.set('verified', graphql.owner.is_verified);
+
             this.set('loaded', true);
           }
         });
