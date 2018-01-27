@@ -271,11 +271,9 @@
       _getInstagramAPI(instagramUrl) {
         var xhr = new XMLHttpRequest();
         xhr.addEventListener("load", (e) => {
-          console.log(e.target);
           if (e.target.status == 200) {
             let responseObj = JSON.parse(e.target.response);
             let graphql = responseObj.graphql.shortcode_media;
-            console.log(responseObj);
             this.set('imgSrc', graphql.display_url);
             this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('authorId', graphql.owner.username);
@@ -285,11 +283,9 @@
             this.set('likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('verified', graphql.owner.is_verified);
-
             this.set('loaded', true);
           }
         });
-        console.log(this.instagramUrl + "/?__a=1");
         xhr.open("GET", "https://cors.io/?" + this.instagramUrl + "/?__a=1");
         xhr.send();
       }
