@@ -1,21 +1,23 @@
 # \<instagram-post\>
 
-Display an Instagram post in your Polymer website
+Display an Instagram image post in your Polymer website
 
-## Install the Polymer-CLI
+## Installation
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+`bower install --save`
 
-## Viewing Your Element
+## Usage
 
-```
-$ polymer serve
-```
+### Include your element
+`<link rel="import" href="../bower_components/instagram-post/instagram-post.html">`
 
-## Running Tests
+### Find your post id
 
-```
-$ polymer test
-```
+For example, https://www.instagram.com/p/BeY1pSzBl2f/
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+### Add to your app
+`<instagram-post postid="BeY1pSzBl2f"></instagram-post>`
+
+## History
+
+Jan 27, 2018 - First release. Only support for single image
