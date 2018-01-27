@@ -1,10 +1,12 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/anthfran/polymer-instagram-post)
+
 # \<instagram-post\>
 
 Display an Instagram image post in your Polymer website
 
 ## Installation
 
-`bower install --save`
+`bower install --save anthfran/polymer-instagram-post`
 
 ## Usage
 
@@ -13,7 +15,7 @@ Display an Instagram image post in your Polymer website
 
 ### Find your post id
 
-For example, https://www.instagram.com/p/BeY1pSzBl2f/
+For example the post id for (https://www.instagram.com/p/BeY1pSzBl2f/) is BeY1pSzBl2f
 
 ### Add to your app
 `<instagram-post postid="BeY1pSzBl2f"></instagram-post>`
