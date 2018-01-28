@@ -166,8 +166,8 @@
         <div hidden$=[[!loaded]]>
           <a href$=[[instagramUrl]]>
             <img class="instagram-image" hidden$=[[isvideo]] src$=[[imgSrc]]>
-            <video width="100%" autoplay poster="[[imgSrc]]" preload="none" src="[[videosrc]]" type="video/mp4"></video>
           </a>
+          <video width="100%" hidden$=[[!isvideo]] on-click="clickVideo" poster="[[imgSrc]]" preload="none" src="[[videosrc]]" type="video/mp4" loop> </video>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
@@ -267,6 +267,10 @@
         };
       }
 
+      clickVideo(e) {
+        console.log('clicked');
+        console.log(e.path[0].play());
+      }
       _computeAuthorUrl(authorId) {
         return 'https://www.instagram.com/' + authorId;
       }
