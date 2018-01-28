@@ -163,9 +163,12 @@
         </span>
       </div>
       <div class="instagram-textcontent">
-        <a href$=[[instagramUrl]]>
-          <img class="instagram-image" hidden$=[[!loaded]] src$=[[imgSrc]]>
-        </a>
+        <div hidden$=[[!loaded]]>
+          <a href$=[[instagramUrl]]>
+            <img class="instagram-image" hidden$=[[isvideo]] src$=[[imgSrc]]>
+            <video width="100%" autoplay poster="[[imgSrc]]" preload="none" src="[[videosrc]]" type="video/mp4"></video>
+          </a>
+        </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
         </div>
@@ -244,7 +247,18 @@
           },
           verified: {
             type: Boolean,
-            value: true
+            value: false
+          },
+          typename: {
+            type: String
+          },
+          isvideo: {
+            type: Boolean,
+            value: false,
+            computed: '_computeIsVideo(typename)'
+          },
+          videosrc: {
+            type: String
           },
           loaded: {
             type: Boolean,
@@ -267,6 +281,10 @@
           return postDate.toLocaleDateString("en-US",options)
         }
       }
+      _computeIsVideo(typename) {
+        if (typename == 'GraphVideo') return true
+        else return false
+      }
 
       _getInstagramAPI(instagramUrl) {
         var xhr = new XMLHttpRequest();
@@ -275,6 +293,8 @@
             let responseObj = JSON.parse(e.target.response);
             let graphql = responseObj.graphql.shortcode_media;
             this.set('imgSrc', graphql.display_url);
+            this.set('videosrc', graphql.video_url);
+            this.set('typename', graphql.__typename);
             this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('authorId', graphql.owner.username);
             this.set('authorName', graphql.owner.full_name);
@@ -286,7 +306,7 @@
             this.set('loaded', true);
           }
         });
-        xhr.open("GET", this.instagramUrl + "/?__a=1");
+        xhr.open("GET", "https://cors.io/?" + this.instagramUrl + "/?__a=1");
         xhr.send();
       }
 
