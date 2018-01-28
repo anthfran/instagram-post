@@ -10,14 +10,14 @@ Display an Instagram image post in your Polymer website
 
 ## Usage
 
-### Include your element
+### Include this custom element
 `<link rel="import" href="../bower_components/instagram-post/instagram-post.html">`
 
 ### Find your post id
 
 For example the post id for (https://www.instagram.com/p/BeY1pSzBl2f/) is BeY1pSzBl2f
 
-### Add to your app
+### Add this custom element to your app
 `<instagram-post postid="BeY1pSzBl2f"></instagram-post>`
 
 ## History
