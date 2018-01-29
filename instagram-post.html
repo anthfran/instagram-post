@@ -5,6 +5,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
     <style>
       :host {
         display: block;
+        --playbutton-opacity: 0;
       }
       :host([hidden]) {
         display: none;
@@ -98,6 +99,11 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         background-image: url(06390c4e5e96.png);
         background-size: 152px 135px;
         background-position: 0 0;
+        transition-property: opacity;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-out;
+        transition-delay: .1s;
+        opacity: var(--playbutton-opacity);
       }
       .instagram-post {
         background:#FFF;
@@ -189,8 +195,8 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
             <img id="instagramImage" class="instagram-image">
           </a>
           <div class="instagram-video" hidden$=[[!_isvideo]]>
-            <video id="instagramVideo" on-click="_clickVideo" width="100%" loop preload="none" type="video/mp4"></video>
-            <a class="instagram-playbutton" ></a>
+            <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
+            <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
           </div>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
@@ -313,11 +319,13 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
 
       _clickVideo(e) {
         if (!this._playing) {
-          e.path[0].play();
+          this.$.instagramVideo.play();
+          this.updateStyles({'--playbutton-opacity': 0});
           this.set('_playing', true);
         }
         else {
-          e.path[0].pause();
+          this.$.instagramVideo.pause();
+          this.updateStyles({'--playbutton-opacity': 1});
           this.set('_playing', false);
         }
       }
@@ -341,7 +349,6 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         }
       }
       _computeIsVideo(graphType) {
-        console.log(graphType);
         if (!graphType)
           return;
         if (graphType == 'GraphVideo') {
@@ -377,6 +384,15 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         });
         xhr.open("GET", this._instagramUrl + "/?__a=1");
         xhr.send();
+      }
+
+      _videoHover(){
+        if (!this._playing)
+          this.updateStyles({'--playbutton-opacity': 1});
+      }
+
+      _videoUnhover(){
+        this.updateStyles({'--playbutton-opacity': 0});
       }
 
       connectedCallback() {
