@@ -212,13 +212,25 @@
           postid: {
             type: String
           },
+          /**
+          * _authorUrl: Computed URL leading to author's instagram page
+          * @type {String}
+          */
           _authorUrl: {
             type: String,
             computed: '_computeAuthorUrl(_instaObject.authorId)'
           },
+          /**
+          * _graphType: Either GraphImage or GraphVideo from Instragram's POST data
+          * @type {String}
+          */
           _graphType: {
             type: String
           },
+          /**
+          * _humanDate: Computed Human readable date
+          * @type {String}
+          */
           _humanDate: {
             type: String,
             computed: '_computeHumanDate(_instaObject.timestamp)'
@@ -231,16 +243,28 @@
             type: Object,
             value: {}
           },
+          /**
+          * _instagramUrl: Computed URL of instagram post
+          * @type {String}
+          */
           instagramUrl: {
             type: String,
             computed: '_buildUrl(postid)',
             observer: '_getInstagramAPI'
           },
+          /**
+          * _isvideo: Enabled video container
+          * @type {Boolean}
+          */
           _isvideo: {
             type: Boolean,
             value: false,
             computed: '_computeIsVideo(graphType)'
           },
+          /**
+          * _loaded: Flag for when data has been loaded from Instagram
+          * @type {Boolean}
+          */
           _loaded: {
             type: Boolean,
             value: false
