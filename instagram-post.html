@@ -6,6 +6,9 @@
       :host {
         display: block;
       }
+      :host([hidden]) {
+        display: none;
+      }
       .instagram-post {
         background:#FFF;
         border:0;
@@ -164,10 +167,10 @@
       </div>
       <div class="instagram-textcontent">
         <div hidden$=[[!loaded]]>
-          <a href$=[[instagramUrl]]>
-            <img class="instagram-image" hidden$=[[isvideo]] src$=[[imgSrc]]>
+          <a href$=[[instagramUrl]] hidden$=[[isvideo]] >
+            <img class="instagram-image" src$=[[imgSrc]]>
           </a>
-          <video width="100%" hidden$=[[!isvideo]] on-click="clickVideo" poster="[[imgSrc]]" preload="none" src="[[videosrc]]" type="video/mp4" loop> </video>
+          <video hidden$=[[!isvideo]] width="100%" autoplay poster="[[imgSrc]]" preload="none" src="[[videosrc]]" type="video/mp4"></video>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
@@ -266,11 +269,10 @@
           }
         };
       }
-
-      clickVideo(e) {
-        console.log('clicked');
-        console.log(e.path[0].play());
+      _buildUrl(postid) {
+        return 'https://www.instagram.com/p/' + postid;
       }
+
       _computeAuthorUrl(authorId) {
         return 'https://www.instagram.com/' + authorId;
       }
@@ -312,10 +314,6 @@
         });
         xhr.open("GET", "https://cors.io/?" + this.instagramUrl + "/?__a=1");
         xhr.send();
-      }
-
-      _buildUrl(postid) {
-        return 'https://www.instagram.com/p/' + postid;
       }
 
       connectedCallback() {
