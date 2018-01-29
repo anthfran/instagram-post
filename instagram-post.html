@@ -9,17 +9,53 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
       :host([hidden]) {
         display: none;
       }
-      .instagram-post {
-        background:#FFF;
-        border:0;
-        border-radius:3px;
-        box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
-        margin: 1px;
-        max-width:658px;
-        padding:0;
-        width:99.375%;
-        width:-webkit-calc(100% - 2px);
-        width:calc(100% - 2px);
+      .bolded {
+        font-weight: 600;
+      }
+      .gray {
+        color: #999;
+      }
+      .instagram-avatar img{
+        border-radius: 50%;
+        height: 30px;
+      }
+      .instagram-author {
+        color:#262626;
+        font-family:Arial,sans-serif;
+        font-size:14px;
+        font-weight: 600;
+        font-style:normal;
+        line-height:17px;
+      }
+      .instagram-footer {
+        vertical-align: middle;
+        -webkit-box-align:center;
+        -webkit-align-items:center;
+        -ms-flex-align:center;
+        align-items:center;
+        border-top:1px solid #eee;
+        -webkit-box-orient:horizontal;
+        -webkit-box-direction:normal;
+        -webkit-flex-direction:row;
+        -ms-flex-direction:row;
+        flex-direction:row;
+        height:24px;
+        padding:10px
+      }
+      .instagram-glyph {
+        display: inline-block;
+        float: right;
+        -webkit-box-align:center;
+        -webkit-align-items:center;
+        -ms-flex-align:center;
+        align-items:center;
+        vertical-align: middle;
+        height: 24px;
+        width: 26px;
+        overflow: hidden;
+        background-position: -24px 0px;
+        background-image: url(f8cfa266e12d.png);
+        background-size: 74px 49px;
       }
       .instagram-header {
         -webkit-box-align: center;
@@ -38,9 +74,71 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         height: 34px;
         padding: 10px;
       }
-      .instagram-avatar img{
-        border-radius: 50%;
-        height: 30px;
+      .instagram-image {
+        width:100%;
+      }
+      .instagram-logo {
+        background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAMUExURczMzPf399fX1+bm5mzY9AMAAADiSURBVDjLvZXbEsMgCES5/P8/t9FuRVCRmU73JWlzosgSIIZURCjo/ad+EQJJB4Hv8BFt+IDpQoCx1wjOSBFhh2XssxEIYn3ulI/6MNReE07UIWJEv8UEOWDS88LY97kqyTliJKKtuYBbruAyVh5wOHiXmpi5we58Ek028czwyuQdLKPG1Bkb4NnM+VeAnfHqn1k4+GPT6uGQcvu2h2OVuIf/gWUFyy8OWEpdyZSa3aVCqpVoVvzZZ2VTnn2wU8qzVjDDetO90GSy9mVLqtgYSy231MxrY6I2gGqjrTY0L8fxCxfCBbhWrsYYAAAAAElFTkSuQmCC);
+        display:block;
+        height:44px;
+        margin:0 auto -44px;
+        position:relative;
+        top:-22px;
+        width:44px;
+      }
+      .instagram-playbutton {
+        display: block;
+        height: 135px;
+        left: 50%;
+        margin-left: -67px;
+        margin-top: -67px;
+        top: 50%;
+        width: 135px;
+        position: absolute;
+        background-image: url(06390c4e5e96.png);
+        background-size: 152px 135px;
+        background-position: 0 0;
+      }
+      .instagram-post {
+        background:#FFF;
+        border:0;
+        border-radius:3px;
+        box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
+        margin: 1px;
+        max-width:658px;
+        padding:0;
+        width:99.375%;
+        width:-webkit-calc(100% - 2px);
+        width:calc(100% - 2px);
+      }
+      .instagram-temp {
+        background:#F8F8F8;
+        line-height:0;
+        padding:62.5% 0;
+        text-align:center;
+        width:100%;
+      }
+      .instagram-text {
+        color:#000;
+        font-size:14px;
+        font-style:normal;
+        font-weight:normal;
+        line-height:17px;
+        text-decoration:none;
+        word-wrap:break-word;
+      }
+      .instagram-textbox {
+        margin:8px 0 0 0;
+        padding:0 10px;
+      }
+      .instagram-textcontent {
+        padding-bottom: 10px;
+      }
+      .instagram-time {
+        display: inline-block;
+        font-size:12px;
+        text-decoration: none;
+        line-height:17px;
       }
       .instagram-username {
         -webkit-box-align: center;
@@ -67,108 +165,10 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         background-image: url(f8cfa266e12d.png);
         background-size: 74px 49px;
       }
-      .instagram-image {
-        width:100%;
-      }
-      .instagram-temp {
-        background:#F8F8F8;
-        line-height:0;
-        padding:62.5% 0;
-        text-align:center;
-        width:100%;
-      }
-      .instagram-logo {
-        background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAMUExURczMzPf399fX1+bm5mzY9AMAAADiSURBVDjLvZXbEsMgCES5/P8/t9FuRVCRmU73JWlzosgSIIZURCjo/ad+EQJJB4Hv8BFt+IDpQoCx1wjOSBFhh2XssxEIYn3ulI/6MNReE07UIWJEv8UEOWDS88LY97kqyTliJKKtuYBbruAyVh5wOHiXmpi5we58Ek028czwyuQdLKPG1Bkb4NnM+VeAnfHqn1k4+GPT6uGQcvu2h2OVuIf/gWUFyy8OWEpdyZSa3aVCqpVoVvzZZ2VTnn2wU8qzVjDDetO90GSy9mVLqtgYSy231MxrY6I2gGqjrTY0L8fxCxfCBbhWrsYYAAAAAElFTkSuQmCC);
-        display:block;
-        height:44px;
-        margin:0 auto -44px;
-        position:relative;
-        top:-22px;
-        width:44px;
-      }
-      .instagram-textbox {
-        margin:8px 0 0 0;
-        padding:0 10px;
-      }
-      .instagram-text {
-        color:#000;
-        font-size:14px;
-        font-style:normal;
-        font-weight:normal;
-        line-height:17px;
-        text-decoration:none;
-        word-wrap:break-word;
-      }
-      .instagram-author {
-        color:#262626;
-        font-family:Arial,sans-serif;
-        font-size:14px;
-        font-weight: 600;
-        font-style:normal;
-        line-height:17px;
-      }
-      .instagram-time {
-        display: inline-block;
-        font-size:12px;
-        text-decoration: none;
-        line-height:17px;
-      }
-      .instagram-glyph {
-        display: inline-block;
-        float: right;
-        -webkit-box-align:center;
-        -webkit-align-items:center;
-        -ms-flex-align:center;
-        align-items:center;
-        vertical-align: middle;
-        height: 24px;
-        width: 26px;
-        overflow: hidden;
-        background-position: -24px 0px;
-        background-image: url(f8cfa266e12d.png);
-        background-size: 74px 49px;
-      }
-      .instagram-playbutton {
-        display: block;
-        height: 135px;
-        left: 50%;
-        margin-left: -67px;
-        margin-top: -67px;
-        top: 50%;
-        width: 135px;
-        position: absolute;
-        background-image: url(06390c4e5e96.png);
-        background-size: 152px 135px;
-        background-position: 0 0;
-      }
-      .bolded {
-        font-weight: 600;
-      }
-      .gray {
-        color: #999;
-      }
-      .instagram-textcontent {
-        padding-bottom: 10px;
-      }
-      .instagram-footer {
-        vertical-align: middle;
-        -webkit-box-align:center;
-        -webkit-align-items:center;
-        -ms-flex-align:center;
-        align-items:center;
-        border-top:1px solid #eee;
-        -webkit-box-orient:horizontal;
-        -webkit-box-direction:normal;
-        -webkit-flex-direction:row;
-        -ms-flex-direction:row;
-        flex-direction:row;
-        height:24px;
-        padding:10px
-      }
       .instagram-video {
         width: 100%;
-  height: 100%;
-  position: relative;
+        height: 100%;
+        position: relative;
       }
     </style>
 
