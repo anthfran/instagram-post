@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer-element.html">
+authorId<link rel="import" href="../polymer/polymer-element.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -157,10 +157,10 @@
     <blockquote class="instagram-post">
       <div class="instagram-header">
         <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-          <img id="instagramAvatar" alt$=[[_instaObject.authorId]]>
+          <img id="instagramAvatar" alt$=[[authorId]]>
         </a>
         <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
-          [[_instaObject.authorId]]
+          [[authorId]]
         </a>
         <span class="instagram-verified" hidden$=[[!verified]]>
         </span>
@@ -179,7 +179,7 @@
           <a class="instagram-text bolded" href$=[[instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
         </p>
         <p class="instagram-textbox" hidden$=[[!loaded]]>
-          <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[_instaObject.authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
+          <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
         </p>
         <p class="instagram-textbox" hidden$=[[!loaded]]>
           <a class="instagram-text gray" href$=[[instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
@@ -206,19 +206,23 @@
       static get properties() {
         return {
           /**
-          * postid: ID of instagram post
+          * postid: ID of Instagram post
           * @type {String}
           */
           postid: {
             type: String
           },
           /**
-          * _authorUrl: Computed URL leading to author's instagram page
+          * _authorId: Author ID of the Instagram post
+          * @type {String}
+          */
+          /**
+          * _authorUrl: Computed URL leading to author's Instagram page
           * @type {String}
           */
           _authorUrl: {
             type: String,
-            computed: '_computeAuthorUrl(_instaObject.authorId)'
+            computed: '_computeAuthorUrl(authorId)'
           },
           /**
           * _graphType: Either GraphImage or GraphVideo from Instragram's POST data
@@ -321,7 +325,7 @@
             this.set('_instaObject.videosrc', graphql.video_url);
             this.set('graphType', graphql.__typename);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-            this.set('_instaObject.authorId', graphql.owner.username);
+            this.set('authorId', graphql.owner.username);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
             this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
             this.$.instagramAvatar.src = this._instaObject.authorAvatar;
