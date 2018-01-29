@@ -128,6 +128,19 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         background-image: url(f8cfa266e12d.png);
         background-size: 74px 49px;
       }
+      .instagram-playbutton {
+        display: block;
+        height: 135px;
+        left: 50%;
+        margin-left: -67px;
+        margin-top: -67px;
+        top: 50%;
+        width: 135px;
+        position: absolute;
+        background-image: url(06390c4e5e96.png);
+        background-size: 152px 135px;
+        background-position: 0 0;
+      }
       .bolded {
         font-weight: 600;
       }
@@ -152,6 +165,11 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         height:24px;
         padding:10px
       }
+      .instagram-video {
+        width: 100%;
+  height: 100%;
+  position: relative;
+      }
     </style>
 
     <blockquote class="instagram-post">
@@ -170,7 +188,10 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
           <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
             <img id="instagramImage" class="instagram-image">
           </a>
-          <video id="instagramVideo" on-click="_clickVideo" hidden$=[[!_isvideo]] width="100%" loop preload="none" type="video/mp4"></video>
+          <div class="instagram-video" hidden$=[[!_isvideo]]>
+            <video id="instagramVideo" on-click="_clickVideo" width="100%" loop preload="none" type="video/mp4"></video>
+            <a class="instagram-playbutton" ></a>
+          </div>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
