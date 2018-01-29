@@ -205,9 +205,6 @@
       static get is() { return 'instagram-post'; }
       static get properties() {
         return {
-          ajaxResponse: {
-            type: Object
-          },
           authorAvatar: {
             type: String
           },
@@ -245,7 +242,7 @@
           isvideo: {
             type: Boolean,
             value: false,
-            computed: '_computeIsVideo(typename)'
+            computed: '_computeIsVideo(graphtype)'
           },
           likes: {
             type: String
@@ -257,7 +254,7 @@
           timestamp: {
             type: Number
           },
-          typename: {
+          graphtype: {
             type: String
           },
           verified: {
@@ -271,14 +268,20 @@
         };
       }
       _buildUrl(postid) {
+        if (!postid)
+          return;
         return 'https://www.instagram.com/p/' + postid;
       }
 
       _computeAuthorUrl(authorId) {
+        if (!authorId)
+          return;
         return 'https://www.instagram.com/' + authorId;
       }
 
       _computeHumanDate(timestamp) {
+        if (!timestamp)
+          return;
         let postDate = new Date(timestamp*1000);
         let elapsedTime = new Date() - postDate
         if ( elapsedTime < 84400000*7) {
@@ -288,8 +291,10 @@
           return postDate.toLocaleDateString("en-US",options)
         }
       }
-      _computeIsVideo(typename) {
-        if (typename == 'GraphVideo') return true
+      _computeIsVideo(graphtype) {
+        if (!typname)
+          return;
+        if (graphtype == 'GraphVideo') return true
         else return false
       }
 
@@ -301,7 +306,7 @@
             let graphql = responseObj.graphql.shortcode_media;
             this.set('imgSrc', graphql.display_url);
             this.set('videosrc', graphql.video_url);
-            this.set('typename', graphql.__typename);
+            this.set('graphtype', graphql.__typename);
             this.set('instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('authorId', graphql.owner.username);
             this.set('authorName', graphql.owner.full_name);
@@ -313,7 +318,7 @@
             this.set('loaded', true);
           }
         });
-        xhr.open("GET", "https://cors.io/?" + this.instagramUrl + "/?__a=1");
+        xhr.open("GET", 'http://cors.io /?' + this.instagramUrl + "/?__a=1");
         xhr.send();
       }
 
