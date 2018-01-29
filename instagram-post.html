@@ -157,7 +157,7 @@
     <blockquote class="instagram-post">
       <div class="instagram-header">
         <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-          <img src$=[[_instaObject.authorAvatar]] alt$=[[_instaObject.authorId]]>
+          <img id="instagramAvatar" alt$=[[_instaObject.authorId]]>
         </a>
         <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
           [[_instaObject.authorId]]
@@ -168,9 +168,9 @@
       <div class="instagram-textcontent">
         <div hidden$=[[!loaded]]>
           <a href$=[[instagramUrl]] hidden$=[[_isvideo]]>
-            <img class="instagram-image" src$=[[_instaObject.imgSrc]]>
+            <img id="instagramImage" class="instagram-image">
           </a>
-          <video hidden$=[[!_isvideo]] width="100%" loop poster="[[_instaObject.imgSrc]]" preload="none" src="[[_instaObject.videosrc]]" type="video/mp4"></video>
+          <video id="instagramVideo" hidden$=[[!_isvideo]] width="100%" loop preload="none" type="video/mp4"></video>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
@@ -216,6 +216,9 @@
             type: String,
             computed: '_computeAuthorUrl(_instaObject.authorId)'
           },
+          _graphType: {
+            type: String
+          },
           _humanDate: {
             type: String,
             computed: '_computeHumanDate(_instaObject.timestamp)'
@@ -236,7 +239,7 @@
           _isvideo: {
             type: Boolean,
             value: false,
-            computed: '_computeIsVideo(_instaObject.graphtype)'
+            computed: '_computeIsVideo(graphType)'
           },
           _loaded: {
             type: Boolean,
@@ -269,11 +272,19 @@
           return postDate.toLocaleDateString("en-US",options)
         }
       }
-      _computeIsVideo(graphtype) {
-        if (!graphtype)
+      _computeIsVideo(graphType) {
+        console.log(graphType);
+        if (!graphType)
           return;
-        if (graphtype == 'GraphVideo') return true
-        else return false
+        if (graphType == 'GraphVideo') {
+          this.$.instagramVideo.poster = this._instaObject.imgSrc;
+          this.$.instagramVideo.src = this._instaObject.videosrc;
+          return true;
+        }
+        else {
+          this.$.instagramImage.src = this._instaObject.imgSrc;
+          return false;
+        }
       }
 
       _getInstagramAPI(instagramUrl) {
@@ -284,11 +295,12 @@
             let graphql = responseObj.graphql.shortcode_media;
             this.set('_instaObject.imgSrc', graphql.display_url);
             this.set('_instaObject.videosrc', graphql.video_url);
-            this.set('_instaObject.graphtype', graphql.__typename);
+            this.set('graphType', graphql.__typename);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
             this.set('_instaObject.authorId', graphql.owner.username);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
             this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
+            this.$.instagramAvatar.src = this._instaObject.authorAvatar;
             this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('_instaObject.verified', graphql.owner.is_verified);
