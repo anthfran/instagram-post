@@ -167,22 +167,22 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
       </div>
       <div class="instagram-textcontent">
         <div hidden$=[[!loaded]]>
-          <a href$=[[instagramUrl]] hidden$=[[_isvideo]]>
+          <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
             <img id="instagramImage" class="instagram-image">
           </a>
-          <video id="instagramVideo" hidden$=[[!_isvideo]] width="100%" loop preload="none" type="video/mp4"></video>
+          <video id="instagramVideo" on-click="_clickVideo" hidden$=[[!_isvideo]] width="100%" loop preload="none" type="video/mp4"></video>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
           <div class="instagram-logo"></div>
         </div>
         <p class="instagram-textbox" hidden$=[[!loaded]]>
-          <a class="instagram-text bolded" href$=[[instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
+          <a class="instagram-text bolded" href$=[[_instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
         </p>
         <p class="instagram-textbox" hidden$=[[!loaded]]>
-          <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
+          <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[_instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
         </p>
         <p class="instagram-textbox" hidden$=[[!loaded]]>
-          <a class="instagram-text gray" href$=[[instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
+          <a class="instagram-text gray" href$=[[_instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
         </p>
       </div>
       <div class="instagram-footer">
@@ -251,7 +251,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
           * _instagramUrl: Computed URL of instagram post
           * @type {String}
           */
-          instagramUrl: {
+          _instagramUrl: {
             type: String,
             computed: '_buildUrl(postid)',
             observer: '_getInstagramAPI'
@@ -272,6 +272,14 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
           _loaded: {
             type: Boolean,
             value: false
+          },
+          /**
+          * _playing: Flag for wether video is playing
+          * @type {Boolean}
+          */
+          _playing: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -280,6 +288,17 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         if (!postid)
           return;
         return 'https://www.instagram.com/p/' + postid;
+      }
+
+      _clickVideo(e) {
+        if (!this._playing) {
+          e.path[0].play();
+          this.set('_playing', true);
+        }
+        else {
+          e.path[0].pause();
+          this.set('_playing', false);
+        }
       }
 
       _computeAuthorUrl(authorId) {
@@ -323,8 +342,8 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
             let graphql = responseObj.graphql.shortcode_media;
             this.set('_instaObject.imgSrc', graphql.display_url);
             this.set('_instaObject.videosrc', graphql.video_url);
-            this.set('graphType', graphql.__typename);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
+            this.set('graphType', graphql.__typename);
             this.set('authorId', graphql.owner.username);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
             this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
@@ -335,7 +354,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
             this.set('loaded', true);
           }
         });
-        xhr.open("GET", this.instagramUrl + "/?__a=1");
+        xhr.open("GET", this._instagramUrl + "/?__a=1");
         xhr.send();
       }
 
