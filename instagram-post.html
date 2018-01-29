@@ -208,10 +208,33 @@
           ajaxResponse: {
             type: Object
           },
+          authorAvatar: {
+            type: String
+          },
+          authorId: {
+            type: String
+          },
+          authorName: {
+            type: String
+          },
+          authorUrl: {
+            type: String,
+            computed: '_computeAuthorUrl(authorId)'
+          },
+          comments: {
+            type: String
+          },
           postid: {
             type: String
           },
+          humanDate: {
+            type: String,
+            computed: '_computeHumanDate(timestamp)'
+          },
           imgSrc: {
+            type: String
+          },
+          instagramText: {
             type: String
           },
           instagramUrl: {
@@ -219,54 +242,32 @@
             computed: '_buildUrl(postid)',
             observer: '_getInstagramAPI'
           },
-          authorUrl: {
-            type: String,
-            computed: '_computeAuthorUrl(authorId)'
-          },
-          authorName: {
-            type: String
-          },
-          authorId: {
-            type: String
-          },
-          authorAvatar: {
-            type: String
-          },
-          instagramText: {
-            type: String
-          },
-          likes: {
-            type: String
-          },
-          comments: {
-            type: String
-          },
-          timestamp: {
-            type: Number
-          },
-          humanDate: {
-            type: String,
-            computed: '_computeHumanDate(timestamp)'
-          },
-          verified: {
-            type: Boolean,
-            value: false
-          },
-          typename: {
-            type: String
-          },
           isvideo: {
             type: Boolean,
             value: false,
             computed: '_computeIsVideo(typename)'
           },
-          videosrc: {
+          likes: {
             type: String
           },
           loaded: {
             type: Boolean,
             value: false
+          },
+          timestamp: {
+            type: Number
+          },
+          typename: {
+            type: String
+          },
+          verified: {
+            type: Boolean,
+            value: false
+          },
+          videosrc: {
+            type: String
           }
+
         };
       }
       _buildUrl(postid) {
