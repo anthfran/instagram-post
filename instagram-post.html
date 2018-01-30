@@ -41,7 +41,7 @@
       transition-delay: .1s;
       opacity: var(--playbutton-opacity);
     }
-    .instagram-post {
+    .instagram-container {
       background:#FFF;
       border:0;
       border-radius:3px;
@@ -62,7 +62,7 @@
     }
     </style>
 
-    <blockquote class="instagram-post">
+    <blockquote class="instagram-container">
       <instagram-post-header authorid="[[_authorId]]" authorurl="[[_authorUrl]]" avatar="[[_avatar]]" verified="[[_instaObject.verified]]">
       </instagram-post-header>
       <template is="dom-if" if="[[_loaded]]">
