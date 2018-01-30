@@ -8,6 +8,20 @@ Display an Instagram image post in your Polymer website
 
 https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/index.html
 
+<!--
+```
+<custom-element-demo>
+  <template>
+    <link rel="import" href="instagram-post.html">
+    <instagram-post postid="BeY1pSzBl2f"></instagram-post>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<instagram-post postid="BeY1pSzBl2f"></instagram-post>
+```
+
 ## Installation
 
 `bower install --save anthfran/polymer-instagram-post`
