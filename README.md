@@ -8,20 +8,6 @@ Display an Instagram image post in your Polymer website
 
 https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/index.html
 
-<!--
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="instagram-post.html">
-    <instagram-post postid="BeY1pSzBl2f"></instagram-post>
-  </template>
-</custom-element-demo>
-```
--->
-```html
-<instagram-post postid="BeY1pSzBl2f"></instagram-post>
-```
-
 ## Installation
 
 `bower install --save anthfran/polymer-instagram-post`
@@ -35,9 +21,21 @@ https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/
 
 For example the post id for (https://www.instagram.com/p/BeY1pSzBl2f/) is BeY1pSzBl2f
 
-### Add this custom element to your app
-`<instagram-post postid="BeY1pSzBl2f"></instagram-post>`
-
+### Add to your app
+<!--
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="instagram-post.html">
+    <next-code-block></next-code-block>  
+    </template>
+</custom-element-demo>
+```
+-->
+```html
+<instagram-post postid="BeY1pSzBl2f"></instagram-post>
+```
 ## History
 Jan 29, 2018 - v1.1.0 - Implemented video support
 
