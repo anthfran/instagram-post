@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="instagram-post-header.html">
+<link rel="import" href="./instagram-post-header.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -7,7 +7,6 @@
       :host {
         display: block;
         --playbutton-opacity: 0;
-        --video-icon-opacity: 1;
       }
       :host([hidden]) {
         display: none;
@@ -56,7 +55,6 @@
         background-image: url(f8cfa266e12d.png);
         background-size: 74px 49px;
       }
-
       .instagram-image {
         width:100%;
       }
@@ -81,9 +79,13 @@
         background-image: url(06390c4e5e96.png);
         background-size: 152px 135px;
         background-position: 0 0;
+        transition-property: opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+        transition-delay: .1s;
         opacity: var(--playbutton-opacity);
       }
-      .instagram-post div{
+      .instagram-post {
         background:#FFF;
         border:0;
         border-radius:3px;
@@ -91,7 +93,9 @@
         margin: 1px;
         max-width:658px;
         padding:0;
-        width:100%;
+        width:99.375%;
+        width:-webkit-calc(100% - 2px);
+        width:calc(100% - 2px);
       }
       .instagram-temp {
         background:#F8F8F8;
@@ -122,32 +126,14 @@
         text-decoration: none;
         line-height:17px;
       }
-      .instagram-transition {
-        transition-property: opacity;
-        transition-duration: 0.3s;
-        transition-timing-function: ease-out;
-        transition-delay: .1s;
-      }
       .instagram-video {
         width: 100%;
         height: 100%;
         position: relative;
       }
-      .instagram-video-icon {
-        display: block;
-        position: absolute;
-        right: 3px;
-        top: -1px;
-        height: 48px;
-        width: 48px;
-        background-image: url(9e7638226e17.png);
-        background-size: 429px 398px;
-        background-position: -185px -247px;
-        opacity: var(--video-icon-opacity);
-      }
     </style>
 
-    <div class="instagram-post">
+    <blockquote class="instagram-post">
       <instagram-post-header authorid="[[_authorId]]">
       </instagram-post-header>
       <div class="instagram-textcontent">
@@ -157,8 +143,7 @@
           </a>
           <div class="instagram-video" hidden$=[[!_isvideo]]>
             <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
-            <div id="instagramPlaybutton" class="instagram-playbutton instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
-            <div id="instagramVideoIcon" class="instagram-video-icon instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+            <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
           </div>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
@@ -178,7 +163,7 @@
         <a class="instagram-time gray" href="#">[[_humanDate]]</a>
         <span class="instagram-glyph"></span>
       </div>
-      </div>
+      </blockquote>
   </template>
 
   <script>
@@ -255,7 +240,7 @@
           _isvideo: {
             type: Boolean,
             value: false,
-            computed: '_computeIsVideo(_graphType)'
+            computed: '_computeIsVideo(graphType)'
           },
           /**
           * _loaded: Flag for when data has been loaded from Instagram
@@ -286,13 +271,11 @@
         if (!this._playing) {
           this.$.instagramVideo.play();
           this.updateStyles({'--playbutton-opacity': 0});
-          this.updateStyles({'--video-icon-opacity': 0});
           this.set('_playing', true);
         }
         else {
           this.$.instagramVideo.pause();
           this.updateStyles({'--playbutton-opacity': 1});
-          this.updateStyles({'--video-icon-opacity': 1});
           this.set('_playing', false);
         }
       }
@@ -338,7 +321,7 @@
             this.set('_instaObject.imgSrc', graphql.display_url);
             this.set('_instaObject.videosrc', graphql.video_url);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-            this.set('_graphType', graphql.__typename);
+            this.set('graphType', graphql.__typename);
             this.set('_authorId', graphql.owner.username);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
             this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
