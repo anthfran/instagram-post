@@ -134,10 +134,14 @@
     </style>
 
     <blockquote class="instagram-post">
-      <instagram-post-header authorid="[[_authorId]]">
+      <instagram-post-header
+        authorid="[[_authorId]]"
+        authorurl="[[_authorUrl]]"
+        avatar="[[_avatar]]"
+        verified="[[_instaObject.verified]]">
       </instagram-post-header>
       <div class="instagram-textcontent">
-        <div hidden$=[[!loaded]]>
+        <div hidden$=[[!_loaded]]>
           <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
             <img id="instagramImage" class="instagram-image">
           </a>
@@ -146,16 +150,16 @@
             <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
           </div>
         </div>
-        <div class="instagram-temp" hidden$=[[loaded]]>
+        <div class="instagram-temp" hidden$=[[_loaded]]>
           <div class="instagram-logo"></div>
         </div>
-        <p class="instagram-textbox" hidden$=[[!loaded]]>
+        <p class="instagram-textbox" hidden$=[[!_loaded]]>
           <a class="instagram-text bolded" href$=[[_instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
         </p>
-        <p class="instagram-textbox" hidden$=[[!loaded]]>
+        <p class="instagram-textbox" hidden$=[[!_loaded]]>
           <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[_instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
         </p>
-        <p class="instagram-textbox" hidden$=[[!loaded]]>
+        <p class="instagram-textbox" hidden$=[[!_loaded]]>
           <a class="instagram-text gray" href$=[[_instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
         </p>
       </div>
@@ -202,6 +206,13 @@
             computed: '_computeAuthorUrl(authorId)'
           },
           /**
+          * _avatar: Author's avatar image
+          * @type {String}
+          */
+          _avatar: {
+            type: String
+          },
+          /**
           * _graphType: Either GraphImage or GraphVideo from Instragram's POST data
           * @type {String}
           */
@@ -240,7 +251,7 @@
           _isvideo: {
             type: Boolean,
             value: false,
-            computed: '_computeIsVideo(graphType)'
+            computed: '_computeIsVideo(_graphType)'
           },
           /**
           * _loaded: Flag for when data has been loaded from Instagram
@@ -321,15 +332,14 @@
             this.set('_instaObject.imgSrc', graphql.display_url);
             this.set('_instaObject.videosrc', graphql.video_url);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-            this.set('graphType', graphql.__typename);
+            this.set('_graphType', graphql.__typename);
             this.set('_authorId', graphql.owner.username);
+            this.set('_avatar', graphql.owner.profile_pic_url);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
-            this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
-            this.$.instagramAvatar.src = this._instaObject.authorAvatar;
             this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
             this.set('_instaObject.verified', graphql.owner.is_verified);
-            this.set('loaded', true);
+            this.set('_loaded', true);
           }
         });
         xhr.open("GET", this._instagramUrl + "/?__a=1");

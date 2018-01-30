@@ -59,10 +59,10 @@
     }
     </style>
     <div class="instagram-header">
-      <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-        <img id="instagramAvatar" alt$=[[authorId]]>
+      <a class="instagram-avatar" href$=[[authorurl]] target="_blank">
+        <img id="instagramAvatar" alt$=[[authorid]]>
       </a>
-      <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
+      <a class="instagram-username" href$=[[_authorurl]] target="_blank">
         [[authorid]]
       </a>
       <span class="instagram-verified" hidden$=[[!verified]]>
@@ -89,8 +89,18 @@
         */
         authorid: {
           type: String
+        },
+        authorurl: {
+          type: String
+        },
+        avatar: {
+          type: String,
+          observer: '_loadAvatar'
         }
       };
+    }
+    _loadAvatar() {
+      this.$.instagramAvatar.src = this.avatar;
     }
   }
 
