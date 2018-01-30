@@ -135,11 +135,11 @@
       <instagram-post-header authorid="[[_authorId]]" authorurl="[[_authorUrl]]" avatar="[[_avatar]]" verified="[[_instaObject.verified]]">
       </instagram-post-header>
       <template is="dom-if" if="[[_loaded]]">
-        <template is="dom-if" if="[[!_isvideo]]">
+        <template is="dom-if" if="{{!_isVideo(_graphType)}}">
           <instagram-post-image image=[[_instaObject.imgSrc]]>
           </instagram-post-image>
         </template>
-        <template is="dom-if" if="[[_isvideo]]">
+        <template is="dom-if" if="{{_isVideo(_graphType)}}">
           <instagram-post-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
           </instagram-video>
         </template>
@@ -221,6 +221,14 @@
           computed: '_computeHumanDate(_instaObject.timestamp)'
         },
         /**
+        * _loaded: Set true when received POST data from Instagram
+        * @type {String}
+        */
+        _loaded: {
+          type: String,
+          computed: '_computeHumanDate(_instaObject.timestamp)'
+        },
+        /**
         * _instaObject: Container for post details
         * @type {Object}
         */
@@ -236,23 +244,6 @@
           type: String,
           computed: '_buildUrl(postid)',
           observer: '_getInstagramAPI'
-        },
-        /**
-        * _isvideo: Enabled video container
-        * @type {Boolean}
-        */
-        _isvideo: {
-          type: Boolean,
-          value: false,
-          computed: '_computeIsVideo(_graphType)'
-        },
-        /**
-        * _loaded: Flag for when data has been loaded from Instagram
-        * @type {Boolean}
-        */
-        _loaded: {
-          type: Boolean,
-          value: false
         },
         /**
         * _playing: Flag for wether video is playing
@@ -302,7 +293,7 @@
         return postDate.toLocaleDateString("en-US",options)
       }
     }
-    _computeIsVideo(graphType) {
+    _isVideo(graphType) {
       if (!graphType)
         return;
       if (graphType == 'GraphVideo')
@@ -327,20 +318,11 @@
           this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
           this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
           this.set('_instaObject.verified', graphql.owner.is_verified);
-          this.set('_loaded', true);
+          this.set('._loaded', true);
         }
       });
       xhr.open("GET", this._instagramUrl + "/?__a=1");
       xhr.send();
-    }
-
-    _videoHover(){
-      if (!this._playing)
-      this.updateStyles({'--playbutton-opacity': 1});
-    }
-
-    _videoUnhover(){
-      this.updateStyles({'--playbutton-opacity': 0});
     }
 
     connectedCallback() {
