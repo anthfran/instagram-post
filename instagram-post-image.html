@@ -1,0 +1,52 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-post-image">
+  <template>
+    <style>
+    :host([hidden]) {
+      display: none;
+    }
+
+    }
+    </style>
+    <div>
+    </div>
+  </template>
+
+  <script>
+  /**
+  * `instagram-post`
+  * Display an Instagram post in your Polymer website
+  *
+  * @customElement
+  * @polymer
+  * @demo demo/index.html
+  */
+  class InstagramPostImage extends Polymer.Element {
+    static get is() { return 'instagram-post-image'; }
+    static get properties() {
+      return {
+        /**
+        * _authorId: Author ID of the Instagram post
+        * @type {String}
+        */
+        authorid: {
+          type: String
+        },
+        authorurl: {
+          type: String
+        },
+        avatar: {
+          type: String,
+          observer: '_loadAvatar'
+        }
+      };
+    }
+    _loadAvatar() {
+      this.$.instagramAvatar.src = this.avatar;
+    }
+  }
+
+  window.customElements.define(InstagramPostImage.is, InstagramPostImage);
+  </script>
+</dom-module>
