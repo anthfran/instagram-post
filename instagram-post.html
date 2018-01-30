@@ -17,9 +17,14 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
       .gray {
         color: #999;
       }
-      .instagram-avatar img{
+      .instagram-avatar{
+        height: 30px;
+        width: 30px;
+      }
+      .instagram-avatar-img{
         border-radius: 50%;
         height: 30px;
+        width: 30px;
       }
       .instagram-author {
         color:#262626;
@@ -102,7 +107,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         background-position: 0 0;
         opacity: var(--playbutton-opacity);
       }
-      .instagram-post {
+      .instagram-post div{
         background:#FFF;
         border:0;
         border-radius:3px;
@@ -110,9 +115,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         margin: 1px;
         max-width:658px;
         padding:0;
-        width:99.375%;
-        width:-webkit-calc(100% - 2px);
-        width:calc(100% - 2px);
+        width:100%;
       }
       .instagram-temp {
         background:#F8F8F8;
@@ -193,10 +196,10 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
       }
     </style>
 
-    <blockquote class="instagram-post">
+    <div class="instagram-post">
       <div class="instagram-header">
         <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-          <img id="instagramAvatar" alt$=[[authorId]]>
+          <img class="instagram-avatar-img" id="instagramAvatar" alt$=[[authorId]]>
         </a>
         <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
           [[authorId]]
@@ -232,7 +235,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         <a class="instagram-time gray" href="#">[[_humanDate]]</a>
         <span class="instagram-glyph"></span>
       </div>
-      </blockquote>
+      </div>
   </template>
 
   <script>
