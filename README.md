@@ -4,6 +4,10 @@
 
 Display an Instagram image post in your Polymer website
 
+## Demo
+
+https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/index.html
+
 ## Installation
 
 `bower install --save anthfran/polymer-instagram-post`
@@ -22,4 +26,5 @@ For example the post id for (https://www.instagram.com/p/BeY1pSzBl2f/) is BeY1pS
 
 ## History
 Jan 29, 2018 - Implemented video support
+
 Jan 27, 2018 - First release. Only support for single image
