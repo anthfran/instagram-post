@@ -1,0 +1,91 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-post-textarea">
+  <template>
+    <style>
+    :host([hidden]) {
+      display: none;
+    }
+    .bolded {
+      font-weight: 600;
+    }
+    .gray {
+      color: #999;
+    }
+    .instagram-author {
+      color:#262626;
+      font-family:Arial,sans-serif;
+      font-size:14px;
+      font-weight: 600;
+      font-style:normal;
+      line-height:17px;
+    }
+    .instagram-text {
+      color:#000;
+      font-size:14px;
+      font-style:normal;
+      font-weight:normal;
+      line-height:17px;
+      text-decoration:none;
+      word-wrap:break-word;
+    }
+    .instagram-textbox {
+      margin:8px 0 0 0;
+      padding:0 10px;
+    }
+    .instagram-textcontent {
+      padding-bottom: 10px;
+    }
+
+    </style>
+    <p class="instagram-textbox">
+      <a class="instagram-text bolded" href$=[[instagramurl]] target="_blank">[[likes]] likes</a>
+    </p>
+    <p class="instagram-textbox">
+      <a href$=[[authorurl]] class="instagram-author" target="_blank">[[author]]</a> <a class="instagram-text" href$=[[instagramurl]] target="_blank">[[text]]</a>
+    </p>
+    <p class="instagram-textbox">
+      <a class="instagram-text gray" href$=[[instagramurl]] target="_blank">view all [[comments]] comments</a>
+    </p>
+  </template>
+  <script>
+  /**
+  * `instagram-post`
+  * Display an Instagram post in your Polymer website
+  *
+  * @customElement
+  * @polymer
+  * @demo demo/index.html
+  */
+  class InstagramPostTextArea extends Polymer.Element {
+    static get is() { return 'instagram-post-textarea'; }
+    static get properties() {
+      return {
+        author: {
+          type: String
+        },
+        authorurl: {
+          type: String
+        },
+        comments: {
+          type: String
+        },
+        instagramurl: {
+          type: String
+        },
+        likes: {
+          type: String
+        },
+        text: {
+          type: String
+        }
+      };
+    }
+    _loadImage() {
+      this.$.instagramImage.src = this.image;
+    }
+  }
+
+  window.customElements.define(InstagramPostTextArea.is, InstagramPostTextArea);
+  </script>
+</dom-module>

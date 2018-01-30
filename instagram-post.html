@@ -2,6 +2,7 @@
 <link rel="import" href="./instagram-post-header.html">
 <link rel="import" href="./instagram-post-image.html">
 <link rel="import" href="./instagram-post-video.html">
+<link rel="import" href="./instagram-post-textarea.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -11,20 +12,6 @@
     }
     :host([hidden]) {
       display: none;
-    }
-    .bolded {
-      font-weight: 600;
-    }
-    .gray {
-      color: #999;
-    }
-    .instagram-author {
-      color:#262626;
-      font-family:Arial,sans-serif;
-      font-size:14px;
-      font-weight: 600;
-      font-style:normal;
-      line-height:17px;
     }
     .instagram-footer {
       vertical-align: middle;
@@ -102,22 +89,7 @@
       text-align:center;
       width:100%;
     }
-    .instagram-text {
-      color:#000;
-      font-size:14px;
-      font-style:normal;
-      font-weight:normal;
-      line-height:17px;
-      text-decoration:none;
-      word-wrap:break-word;
-    }
-    .instagram-textbox {
-      margin:8px 0 0 0;
-      padding:0 10px;
-    }
-    .instagram-textcontent {
-      padding-bottom: 10px;
-    }
+
     .instagram-time {
       display: inline-block;
       font-size:12px;
@@ -147,15 +119,10 @@
       <div class="instagram-temp" hidden$=[[_loaded]]>
         <div class="instagram-logo"></div>
       </div>
-      <p class="instagram-textbox" hidden$=[[!_loaded]]>
-        <a class="instagram-text bolded" href$=[[_instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
-      </p>
-      <p class="instagram-textbox" hidden$=[[!_loaded]]>
-        <a href$=[[_authorUrl]] class="instagram-author" target="_blank">[[authorId]]</a> <a class="instagram-text" href$=[[_instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
-      </p>
-      <p class="instagram-textbox" hidden$=[[!_loaded]]>
-        <a class="instagram-text gray" href$=[[_instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
-      </p>
+      <template is="dom-if" if="[[_loaded]]">
+        <instagram-post-textarea author=[[_authorId]] authorurl=[[_authorUrl]] comments=[[_instaObject.comments]] instagramurl=[[_instagramUrl]] text=[[_instaObject.instagramText]] likes=[[_instaObject.likes]]>
+        </instagram-post-textarea>
+      </template>
       <div class="instagram-footer">
         <a class="instagram-time gray" href="#">[[_humanDate]]</a>
         <span class="instagram-glyph"></span>
@@ -260,19 +227,6 @@
       if (!postid)
       return;
       return 'https://www.instagram.com/p/' + postid;
-    }
-
-    _clickVideo(e) {
-      if (!this._playing) {
-        this.$.instagramVideo.play();
-        this.updateStyles({'--playbutton-opacity': 0});
-        this.set('_playing', true);
-      }
-      else {
-        this.$.instagramVideo.pause();
-        this.updateStyles({'--playbutton-opacity': 1});
-        this.set('_playing', false);
-      }
     }
 
     _computeAuthorUrl(authorId) {
