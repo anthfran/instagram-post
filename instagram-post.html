@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="instagram-post-header.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -16,15 +17,6 @@
       }
       .gray {
         color: #999;
-      }
-      .instagram-avatar{
-        height: 30px;
-        width: 30px;
-      }
-      .instagram-avatar-img{
-        border-radius: 50%;
-        height: 30px;
-        width: 30px;
       }
       .instagram-author {
         color:#262626;
@@ -64,23 +56,7 @@
         background-image: url(f8cfa266e12d.png);
         background-size: 74px 49px;
       }
-      .instagram-header {
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        height: 34px;
-        padding: 10px;
-      }
+
       .instagram-image {
         width:100%;
       }
@@ -152,31 +128,6 @@
         transition-timing-function: ease-out;
         transition-delay: .1s;
       }
-      .instagram-username {
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        -ms-flex-align: center;
-        align-items: center;
-        display: -webkit-box;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        font-weight: 600;
-        color: #262626;
-        text-decoration: none;
-        padding: 0 10px;
-      }
-      .instagram-verified {
-        height: 12px;
-        width: 12px;
-        overflow: hidden;
-        background-position: -50px -25px;
-        background-image: url(f8cfa266e12d.png);
-        background-size: 74px 49px;
-      }
       .instagram-video {
         width: 100%;
         height: 100%;
@@ -197,16 +148,8 @@
     </style>
 
     <div class="instagram-post">
-      <div class="instagram-header">
-        <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-          <img class="instagram-avatar-img" id="instagramAvatar" alt$=[[authorId]]>
-        </a>
-        <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
-          [[authorId]]
-        </a>
-        <span class="instagram-verified" hidden$=[[!verified]]>
-        </span>
-      </div>
+      <instagram-post-header authorid="[[_authorId]]">
+      </instagram-post-header>
       <div class="instagram-textcontent">
         <div hidden$=[[!loaded]]>
           <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
@@ -262,6 +205,9 @@
           * _authorId: Author ID of the Instagram post
           * @type {String}
           */
+          _authorId: {
+            type: String
+          },
           /**
           * _authorUrl: Computed URL leading to author's Instagram page
           * @type {String}
@@ -309,7 +255,7 @@
           _isvideo: {
             type: Boolean,
             value: false,
-            computed: '_computeIsVideo(graphType)'
+            computed: '_computeIsVideo(_graphType)'
           },
           /**
           * _loaded: Flag for when data has been loaded from Instagram
@@ -392,8 +338,8 @@
             this.set('_instaObject.imgSrc', graphql.display_url);
             this.set('_instaObject.videosrc', graphql.video_url);
             this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-            this.set('graphType', graphql.__typename);
-            this.set('authorId', graphql.owner.username);
+            this.set('_graphType', graphql.__typename);
+            this.set('_authorId', graphql.owner.username);
             this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
             this.set('_instaObject.authorAvatar', graphql.owner.profile_pic_url);
             this.$.instagramAvatar.src = this._instaObject.authorAvatar;
