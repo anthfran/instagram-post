@@ -1,9 +1,9 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="./instagram-post-header.html">
-<link rel="import" href="./instagram-post-image.html">
-<link rel="import" href="./instagram-post-video.html">
-<link rel="import" href="./instagram-post-textarea.html">
-<link rel="import" href="./instagram-post-footer.html">
+<link rel="import" href="./instagram-post-header/instagram-post-header.html">
+<link rel="import" href="./instagram-post-image/instagram-post-image.html">
+<link rel="import" href="./instagram-post-video/instagram-post-video.html">
+<link rel="import" href="./instagram-post-textarea/instagram-post-textarea.html">
+<link rel="import" href="./instagram-post-footer/instagram-post-footer.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -13,6 +13,18 @@
     }
     :host([hidden]) {
       display: none;
+    }
+    blockquote {
+      background:#FFF;
+      border:0;
+      border-radius:3px;
+      box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
+      margin: 1px;
+      max-width:658px;
+      padding:0;
+      width:99.375%;
+      width:-webkit-calc(100% - 2px);
+      width:calc(100% - 2px);
     }
     .instagram-logo {
       background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAMUExURczMzPf399fX1+bm5mzY9AMAAADiSURBVDjLvZXbEsMgCES5/P8/t9FuRVCRmU73JWlzosgSIIZURCjo/ad+EQJJB4Hv8BFt+IDpQoCx1wjOSBFhh2XssxEIYn3ulI/6MNReE07UIWJEv8UEOWDS88LY97kqyTliJKKtuYBbruAyVh5wOHiXmpi5we58Ek028czwyuQdLKPG1Bkb4NnM+VeAnfHqn1k4+GPT6uGQcvu2h2OVuIf/gWUFyy8OWEpdyZSa3aVCqpVoVvzZZ2VTnn2wU8qzVjDDetO90GSy9mVLqtgYSy231MxrY6I2gGqjrTY0L8fxCxfCBbhWrsYYAAAAAElFTkSuQmCC);
@@ -40,18 +52,6 @@
       transition-timing-function: ease-out;
       transition-delay: .1s;
       opacity: var(--playbutton-opacity);
-    }
-    .instagram-container {
-      background:#FFF;
-      border:0;
-      border-radius:3px;
-      box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
-      margin: 1px;
-      max-width:658px;
-      padding:0;
-      width:99.375%;
-      width:-webkit-calc(100% - 2px);
-      width:calc(100% - 2px);
     }
     .instagram-temp {
       background:#F8F8F8;
@@ -102,21 +102,18 @@
       return {
         /**
         * postid: ID of Instagram post
-        * @type {String}
         */
         postid: {
           type: String
         },
         /**
         * _authorId: Author ID of the Instagram post
-        * @type {String}
         */
         _authorId: {
           type: String
         },
         /**
         * _authorUrl: Computed URL leading to author's Instagram page
-        * @type {String}
         */
         _authorUrl: {
           type: String,
@@ -124,21 +121,18 @@
         },
         /**
         * _avatar: Author's avatar image
-        * @type {String}
         */
         _avatar: {
           type: String
         },
         /**
         * _graphType: Either GraphImage or GraphVideo from Instragram's POST data
-        * @type {String}
         */
         _graphType: {
           type: String
         },
         /**
         * _humanDate: Computed Human readable date
-        * @type {String}
         */
         _humanDate: {
           type: String,
@@ -146,7 +140,6 @@
         },
         /**
         * _loaded: Set true when received POST data from Instagram
-        * @type {String}
         */
         _loaded: {
           type: String,
@@ -154,7 +147,6 @@
         },
         /**
         * _instaObject: Container for post details
-        * @type {Object}
         */
         _instaObject: {
           type: Object,
@@ -162,16 +154,14 @@
         },
         /**
         * _instagramUrl: Computed URL of instagram post
-        * @type {String}
         */
         _instagramUrl: {
           type: String,
-          computed: '_buildUrl(postid)',
+          computed: '_computeUrl(postid)',
           observer: '_getInstagramAPI'
         },
         /**
         * _playing: Flag for wether video is playing
-        * @type {Boolean}
         */
         _playing: {
           type: Boolean,
@@ -179,19 +169,24 @@
         }
       };
     }
-
-    _buildUrl(postid) {
-      if (!postid)
-      return;
-      return 'https://www.instagram.com/p/' + postid;
-    }
-
+    /**
+     * Builds a URL for links to post author's Instagram page
+     *
+     * @param {String} authorId of the post
+     * @return {String} URL of post author's page
+     */
     _computeAuthorUrl(authorId) {
       if (!authorId)
       return;
       return 'https://www.instagram.com/' + authorId;
     }
-
+    /**
+     * For time elapsed of less than 10 days, returns a "X days ago" String
+     * Else, returns the date in the format "Month DD, YYYY"
+     *
+     * @param {number} timestamp of the post
+     * @return {String} Human readable date
+     */
     _computeHumanDate(timestamp) {
       if (!timestamp)
       return;
@@ -204,6 +199,24 @@
         return postDate.toLocaleDateString("en-US",options)
       }
     }
+    /**
+     * Computes a URL required for the REST call to Instagram
+     *
+     * @param {String} postid of the
+     * @return {String} URL of the post
+     */
+    _computeUrl(postid) {
+      if (!postid)
+        return;
+      return 'https://www.instagram.com/p/' + postid;
+    }
+    /**
+     * Instagram provides either "GraphVideo" or "GraphImage"
+     * This will convert to boolean, required by dom-if's on the page
+     *
+     * @param {String} graphType of the post
+     * @return {Boolean} True if Video, False if Image
+     */
     _isVideo(graphType) {
       if (!graphType)
         return;
@@ -213,6 +226,12 @@
         return false;
     }
 
+    /**
+     * Executed when _instagramUrl is set, excutes XMLHttpRequest and sets
+     * extracts valuable parameters from the response.
+     *
+     * @param {String} instagramUrl of the post
+     */
     _getInstagramAPI(instagramUrl) {
       var xhr = new XMLHttpRequest();
       xhr.addEventListener("load", (e) => {
