@@ -1,0 +1,92 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-post-video">
+  <template>
+    <style>
+    :host([hidden]) {
+      display: none;
+    }
+    .instagram-playbutton {
+      display: block;
+      height: 135px;
+      left: 50%;
+      margin-left: -67px;
+      margin-top: -67px;
+      top: 50%;
+      width: 135px;
+      position: absolute;
+      background-image: url(06390c4e5e96.png);
+      background-size: 152px 135px;
+      background-position: 0 0;
+      transition-property: opacity;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-out;
+      transition-delay: .1s;
+      opacity: var(--playbutton-opacity);
+    }
+    .instagram-video {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    </style>
+    <div class="instagram-video">
+      <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
+      <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+    </div>
+  </template>
+  <script>
+  /**
+  * `instagram-post`
+  * Display an Instagram post in your Polymer website
+  *
+  * @customElement
+  * @polymer
+  * @demo demo/index.html
+  */
+  class InstagramPostVideo extends Polymer.Element {
+    static get is() { return 'instagram-post-video'; }
+    static get properties() {
+      return {
+        poster: {
+          type: String,
+          observer: '_loadImage'
+        },
+        video: {
+          type: String,
+          observer: '_loadVideo'
+        },
+      };
+    }
+    _clickVideo(e) {
+      if (!this._playing) {
+        this.$.instagramVideo.play();
+        this.updateStyles({'--playbutton-opacity': 0});
+        this.set('_playing', true);
+      }
+      else {
+        this.$.instagramVideo.pause();
+        this.updateStyles({'--playbutton-opacity': 1});
+        this.set('_playing', false);
+      }
+    }
+    _loadImage() {
+      console.log(this.poster);
+      this.$.instagramVideo.poster = this.poster;
+    }
+    _loadVideo() {
+      this.$.instagramVideo.src = this.video;
+    }
+    _videoHover(){
+      if (!this._playing)
+      this.updateStyles({'--playbutton-opacity': 1});
+    }
+
+    _videoUnhover(){
+      this.updateStyles({'--playbutton-opacity': 0});
+    }
+  }
+
+  window.customElements.define(InstagramPostVideo.is, InstagramPostVideo);
+  </script>
+</dom-module>
