@@ -6,13 +6,15 @@
     :host([hidden]) {
       display: none;
     }
-
+    .instagram-image {
+      width:100%;
+    }
     }
     </style>
-    <div>
-    </div>
+      <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
+        <img id="instagramImage" class="instagram-image">
+      </a>
   </template>
-
   <script>
   /**
   * `instagram-post`
@@ -30,20 +32,14 @@
         * _authorId: Author ID of the Instagram post
         * @type {String}
         */
-        authorid: {
-          type: String
-        },
-        authorurl: {
-          type: String
-        },
-        avatar: {
+        image: {
           type: String,
-          observer: '_loadAvatar'
+          observer: '_loadImage'
         }
       };
     }
-    _loadAvatar() {
-      this.$.instagramAvatar.src = this.avatar;
+    _loadImage() {
+      this.$.instagramImage.src = this.image;
     }
   }
 
