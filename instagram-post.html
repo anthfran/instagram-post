@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
 <link rel="import" href="./instagram-post-image.html">
 <link rel="import" href="./instagram-post-video.html">
 
@@ -178,6 +180,13 @@
       background-size: 74px 49px;
     }
     </style>
+    <iron-ajax
+    auto
+    url="[[_instagramUrl]]"
+    params='{"__a":"1"}'
+    handle-as="json"
+    last-response="{{_instaRes}}"
+    debounce-duration="300"></iron-ajax>
 
     <blockquote class="instagram-container">
       <div class="instagram-header">
@@ -283,6 +292,10 @@
         /**
         * _instaObject: Container for post details
         */
+        _instaRes: {
+          type: Object,
+          observer: '_observerInstagramAjax'
+        },
         _instaObject: {
           type: Object,
           value: {}
@@ -292,8 +305,7 @@
         */
         _instagramUrl: {
           type: String,
-          computed: '_computeUrl(postid)',
-          observer: '_getInstagramAPI'
+          computed: '_computeUrl(postid)'
         },
         /**
         * _playing: Flag for wether video is playing
@@ -307,6 +319,21 @@
           value: false
         }
       };
+    }
+
+    _observerInstagramAjax(res) {
+      let graphql = res.graphql.shortcode_media;
+      this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+      this.set('_instaObject.imgSrc', graphql.display_url);
+      this.set('_instaObject.videoSrc', graphql.video_url);
+      this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
+      this.set('_graphType', graphql.__typename);
+      this.set('_authorId', graphql.owner.username);
+      this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
+      this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+      this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+      this.set('_verified', graphql.owner.is_verified);
+      this.set('_loaded', true);
     }
     /**
      * Builds a URL for links to post author's Instagram page
@@ -327,7 +354,6 @@
      * @return {String} Human readable date
      */
     _computeHumanDate(timestamp) {
-      console.log(this._verified);
       if (!timestamp)
       return;
       let postDate = new Date(timestamp*1000);
@@ -364,35 +390,6 @@
         return true;
       else
         return false;
-    }
-
-    /**
-     * Executed when _instagramUrl is set, excutes XMLHttpRequest and sets
-     * extracts valuable parameters from the response.
-     *
-     * @param {String} instagramUrl of the post
-     */
-    _getInstagramAPI(instagramUrl) {
-      var xhr = new XMLHttpRequest();
-      xhr.addEventListener("load", (e) => {
-        if (e.target.status == 200) {
-          let responseObj = JSON.parse(e.target.response);
-          let graphql = responseObj.graphql.shortcode_media;
-          this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
-          this.set('_instaObject.imgSrc', graphql.display_url);
-          this.set('_instaObject.videoSrc', graphql.video_url);
-          this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-          this.set('_graphType', graphql.__typename);
-          this.set('_authorId', graphql.owner.username);
-          this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
-          this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-          this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-          this.set('_verified', graphql.owner.is_verified);
-          this.set('_loaded', true);
-        }
-      });
-      xhr.open("GET", this._instagramUrl + "/?__a=1");
-      xhr.send();
     }
 
     connectedCallback() {
