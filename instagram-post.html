@@ -193,7 +193,7 @@
         <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
           <img id="instagramAvatar" alt$=[[_authorId]]>
         </a>
-        <a class="instagram-username" href$=[[_authorurl]] target="_blank">
+        <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
           [[_authorId]]
         </a>
         <template is="dom-if" if="[[_verified]]">
@@ -202,11 +202,11 @@
         </span>
       </div>
       <template is="dom-if" if="[[_loaded]]">
-        <template is="dom-if" if="{{!_isVideo(_graphType)}}">
+        <template is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
           <instagram-post-image image=[[_instaObject.imgSrc]]>
           </instagram-post-image>
         </template>
-        <template is="dom-if" if="{{_isVideo(_graphType)}}">
+        <template is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
           <instagram-post-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
           </instagram-video>
         </template>
@@ -262,19 +262,7 @@
         */
         _authorUrl: {
           type: String,
-          computed: '_computeAuthorUrl(authorId)'
-        },
-        /**
-        * _avatar: Author's avatar image
-        */
-        _avatar: {
-          type: String
-        },
-        /**
-        * _graphType: Either GraphImage or GraphVideo from Instragram's POST data
-        */
-        _graphType: {
-          type: String
+          computed: '_computeAuthorUrl(_authorId)'
         },
         /**
         * _humanDate: Computed Human readable date
@@ -292,13 +280,13 @@
         /**
         * _instaObject: Container for post details
         */
-        _instaRes: {
-          type: Object,
-          observer: '_observerInstagramAjax'
-        },
         _instaObject: {
           type: Object,
           value: {}
+        },
+        _instaRes: {
+          type: Object,
+          observer: '_observerInstagramAjax'
         },
         /**
         * _instagramUrl: Computed URL of instagram post
@@ -324,11 +312,11 @@
     _observerInstagramAjax(res) {
       let graphql = res.graphql.shortcode_media;
       this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+      this.set('_authorId', graphql.owner.username);
       this.set('_instaObject.imgSrc', graphql.display_url);
       this.set('_instaObject.videoSrc', graphql.video_url);
       this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-      this.set('_graphType', graphql.__typename);
-      this.set('_authorId', graphql.owner.username);
+      this.set('_instaObject.graphType', graphql.__typename);
       this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
       this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
       this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
