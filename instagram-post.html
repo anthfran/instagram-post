@@ -3,6 +3,7 @@
 <link rel="import" href="./instagram-post-image.html">
 <link rel="import" href="./instagram-post-video.html">
 <link rel="import" href="./instagram-post-textarea.html">
+<link rel="import" href="./instagram-post-footer.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -12,36 +13,6 @@
     }
     :host([hidden]) {
       display: none;
-    }
-    .instagram-footer {
-      vertical-align: middle;
-      -webkit-box-align:center;
-      -webkit-align-items:center;
-      -ms-flex-align:center;
-      align-items:center;
-      border-top:1px solid #eee;
-      -webkit-box-orient:horizontal;
-      -webkit-box-direction:normal;
-      -webkit-flex-direction:row;
-      -ms-flex-direction:row;
-      flex-direction:row;
-      height:24px;
-      padding:10px
-    }
-    .instagram-glyph {
-      display: inline-block;
-      float: right;
-      -webkit-box-align:center;
-      -webkit-align-items:center;
-      -ms-flex-align:center;
-      align-items:center;
-      vertical-align: middle;
-      height: 24px;
-      width: 26px;
-      overflow: hidden;
-      background-position: -24px 0px;
-      background-image: url(f8cfa266e12d.png);
-      background-size: 74px 49px;
     }
     .instagram-logo {
       background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAMUExURczMzPf399fX1+bm5mzY9AMAAADiSURBVDjLvZXbEsMgCES5/P8/t9FuRVCRmU73JWlzosgSIIZURCjo/ad+EQJJB4Hv8BFt+IDpQoCx1wjOSBFhh2XssxEIYn3ulI/6MNReE07UIWJEv8UEOWDS88LY97kqyTliJKKtuYBbruAyVh5wOHiXmpi5we58Ek028czwyuQdLKPG1Bkb4NnM+VeAnfHqn1k4+GPT6uGQcvu2h2OVuIf/gWUFyy8OWEpdyZSa3aVCqpVoVvzZZ2VTnn2wU8qzVjDDetO90GSy9mVLqtgYSy231MxrY6I2gGqjrTY0L8fxCxfCBbhWrsYYAAAAAElFTkSuQmCC);
@@ -70,7 +41,7 @@
       transition-delay: .1s;
       opacity: var(--playbutton-opacity);
     }
-    .instagram-post {
+    .instagram-container {
       background:#FFF;
       border:0;
       border-radius:3px;
@@ -89,21 +60,9 @@
       text-align:center;
       width:100%;
     }
-
-    .instagram-time {
-      display: inline-block;
-      font-size:12px;
-      text-decoration: none;
-      line-height:17px;
-    }
-    .instagram-video {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
     </style>
 
-    <blockquote class="instagram-post">
+    <blockquote class="instagram-container">
       <instagram-post-header authorid="[[_authorId]]" authorurl="[[_authorUrl]]" avatar="[[_avatar]]" verified="[[_instaObject.verified]]">
       </instagram-post-header>
       <template is="dom-if" if="[[_loaded]]">
@@ -123,10 +82,8 @@
         <instagram-post-textarea author=[[_authorId]] authorurl=[[_authorUrl]] comments=[[_instaObject.comments]] instagramurl=[[_instagramUrl]] text=[[_instaObject.instagramText]] likes=[[_instaObject.likes]]>
         </instagram-post-textarea>
       </template>
-      <div class="instagram-footer">
-        <a class="instagram-time gray" href="#">[[_humanDate]]</a>
-        <span class="instagram-glyph"></span>
-      </div>
+      <instagram-post-footer date=[[_humanDate]]>
+      </instagram-post-footer>
     </blockquote>
   </template>
 

@@ -1,0 +1,75 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-post-footer">
+  <template>
+    <style>
+    :host([hidden]) {
+      display: none;
+    }
+    .instagram-footer {
+      vertical-align: middle;
+      -webkit-box-align:center;
+      -webkit-align-items:center;
+      -ms-flex-align:center;
+      align-items:center;
+      border-top:1px solid #eee;
+      -webkit-box-orient:horizontal;
+      -webkit-box-direction:normal;
+      -webkit-flex-direction:row;
+      -ms-flex-direction:row;
+      flex-direction:row;
+      height:24px;
+      padding:10px
+    }
+    .instagram-glyph {
+      display: inline-block;
+      float: right;
+      -webkit-box-align:center;
+      -webkit-align-items:center;
+      -ms-flex-align:center;
+      align-items:center;
+      vertical-align: middle;
+      height: 24px;
+      width: 26px;
+      overflow: hidden;
+      background-position: -24px 0px;
+      background-image: url(f8cfa266e12d.png);
+      background-size: 74px 49px;
+    }
+    .instagram-time {
+      display: inline-block;
+      font-size:12px;
+      text-decoration: none;
+      line-height:17px;
+      color: #999;
+    }
+    </style>
+
+    <div class="instagram-footer">
+      <a class="instagram-time gray" href="#">[[date]]</a>
+      <span class="instagram-glyph"></span>
+    </div>
+  </template>
+
+  <script>
+  /**
+  * `instagram-post-header`
+  * Header element for:
+  *
+  * `instagram-post`
+  * Display an Instagram post in your Polymer website
+  */
+  class InstagramPostFooter extends Polymer.Element {
+    static get is() { return 'instagram-post-footer'; }
+    static get properties() {
+      return {
+        date: {
+          type: String
+        }
+      };
+    }
+  }
+
+  window.customElements.define(InstagramPostFooter.is, InstagramPostFooter);
+  </script>
+</dom-module>
