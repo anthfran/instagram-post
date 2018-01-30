@@ -6,7 +6,6 @@
       :host {
         display: block;
         --playbutton-opacity: 0;
-        --video-icon-opacity: 1;
       }
       :host([hidden]) {
         display: none;
@@ -17,11 +16,7 @@
       .gray {
         color: #999;
       }
-      .instagram-avatar{
-        height: 30px;
-        width: 30px;
-      }
-      .instagram-avatar-img{
+      .instagram-avatar img{
         border-radius: 50%;
         height: 30px;
         width: 30px;
@@ -105,9 +100,13 @@
         background-image: url(06390c4e5e96.png);
         background-size: 152px 135px;
         background-position: 0 0;
+        transition-property: opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+        transition-delay: .1s;
         opacity: var(--playbutton-opacity);
       }
-      .instagram-post div{
+      .instagram-post {
         background:#FFF;
         border:0;
         border-radius:3px;
@@ -115,7 +114,9 @@
         margin: 1px;
         max-width:658px;
         padding:0;
-        width:100%;
+        width:99.375%;
+        width:-webkit-calc(100% - 2px);
+        width:calc(100% - 2px);
       }
       .instagram-temp {
         background:#F8F8F8;
@@ -145,12 +146,6 @@
         font-size:12px;
         text-decoration: none;
         line-height:17px;
-      }
-      .instagram-transition {
-        transition-property: opacity;
-        transition-duration: 0.3s;
-        transition-timing-function: ease-out;
-        transition-delay: .1s;
       }
       .instagram-username {
         -webkit-box-align: center;
@@ -182,24 +177,12 @@
         height: 100%;
         position: relative;
       }
-      .instagram-video-icon {
-        display: block;
-        position: absolute;
-        right: 3px;
-        top: -1px;
-        height: 48px;
-        width: 48px;
-        background-image: url(9e7638226e17.png);
-        background-size: 429px 398px;
-        background-position: -185px -247px;
-        opacity: var(--video-icon-opacity);
-      }
     </style>
 
-    <div class="instagram-post">
+    <blockquote class="instagram-post">
       <div class="instagram-header">
         <a class="instagram-avatar" href$=[[_authorUrl]] target="_blank">
-          <img class="instagram-avatar-img" id="instagramAvatar" alt$=[[authorId]]>
+          <img id="instagramAvatar" alt$=[[authorId]]>
         </a>
         <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
           [[authorId]]
@@ -214,8 +197,7 @@
           </a>
           <div class="instagram-video" hidden$=[[!_isvideo]]>
             <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
-            <div id="instagramPlaybutton" class="instagram-playbutton instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
-            <div id="instagramVideoIcon" class="instagram-video-icon instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+            <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
           </div>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
@@ -235,7 +217,7 @@
         <a class="instagram-time gray" href="#">[[_humanDate]]</a>
         <span class="instagram-glyph"></span>
       </div>
-      </div>
+      </blockquote>
   </template>
 
   <script>
@@ -340,13 +322,11 @@
         if (!this._playing) {
           this.$.instagramVideo.play();
           this.updateStyles({'--playbutton-opacity': 0});
-          this.updateStyles({'--video-icon-opacity': 0});
           this.set('_playing', true);
         }
         else {
           this.$.instagramVideo.pause();
           this.updateStyles({'--playbutton-opacity': 1});
-          this.updateStyles({'--video-icon-opacity': 1});
           this.set('_playing', false);
         }
       }
