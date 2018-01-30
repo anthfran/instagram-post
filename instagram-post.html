@@ -6,6 +6,7 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
       :host {
         display: block;
         --playbutton-opacity: 0;
+        --video-icon-opacity: 1;
       }
       :host([hidden]) {
         display: none;
@@ -99,10 +100,6 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         background-image: url(06390c4e5e96.png);
         background-size: 152px 135px;
         background-position: 0 0;
-        transition-property: opacity;
-        transition-duration: 0.3s;
-        transition-timing-function: ease-out;
-        transition-delay: .1s;
         opacity: var(--playbutton-opacity);
       }
       .instagram-post {
@@ -146,6 +143,12 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         text-decoration: none;
         line-height:17px;
       }
+      .instagram-transition {
+        transition-property: opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+        transition-delay: .1s;
+      }
       .instagram-username {
         -webkit-box-align: center;
         -webkit-align-items: center;
@@ -176,6 +179,18 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         height: 100%;
         position: relative;
       }
+      .instagram-video-icon {
+        display: block;
+        position: absolute;
+        right: 3px;
+        top: -1px;
+        height: 48px;
+        width: 48px;
+        background-image: url(9e7638226e17.png);
+        background-size: 429px 398px;
+        background-position: -185px -247px;
+        opacity: var(--video-icon-opacity);
+      }
     </style>
 
     <blockquote class="instagram-post">
@@ -196,7 +211,8 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
           </a>
           <div class="instagram-video" hidden$=[[!_isvideo]]>
             <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
-            <div id="instagramPlaybutton" class="instagram-playbutton" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+            <div id="instagramPlaybutton" class="instagram-playbutton instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+            <div id="instagramVideoIcon" class="instagram-video-icon instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
           </div>
         </div>
         <div class="instagram-temp" hidden$=[[loaded]]>
@@ -321,11 +337,13 @@ authorId<link rel="import" href="../polymer/polymer-element.html">
         if (!this._playing) {
           this.$.instagramVideo.play();
           this.updateStyles({'--playbutton-opacity': 0});
+          this.updateStyles({'--video-icon-opacity': 0});
           this.set('_playing', true);
         }
         else {
           this.$.instagramVideo.pause();
           this.updateStyles({'--playbutton-opacity': 1});
+          this.updateStyles({'--video-icon-opacity': 1});
           this.set('_playing', false);
         }
       }
