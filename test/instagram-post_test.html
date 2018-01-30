@@ -13,37 +13,40 @@
   </head>
   <body>
 
-    <test-fixture id="BasicTestFixture">
+    <test-fixture id="InstagramImagePost">
       <template>
-        <instagram-post></instagram-post>
+        <instagram-post postid="BeY1pSzBl2f"></instagram-post>
       </template>
     </test-fixture>
 
-    <test-fixture id="ChangedPropertyTestFixture">
+    <!-- <test-fixture id="ChangedPropertyTestFixture">
       <template>
         <instagram-post prop1="new-prop1"></instagram-post>
       </template>
-    </test-fixture>
+    </test-fixture> -->
 
     <script>
       suite('instagram-post', () => {
+        test('instantiating the element with default properties works', (done) => {
+          const element = fixture('InstagramImagePost');
+          element.addEventListener('test-event', function(event) {
+            assert.equal(event.detail, 'tested!');
+            done();
+          });
+          //          const myEl = element.shadowRoot;
 
-        test('instantiating the element with default properties works', () => {
-          const element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'instagram-post');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello instagram-post!');
+          // const elementHeader = elementShadowRoot.querySelector('h2');
+          // assert.equal(elementHeader.innerHTML, 'Hello instagram-post!');
         });
 
-        test('setting a property on the element works', () => {
-          // Create a test fixture
-          const element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
-        });
+        // test('setting a property on the element works', () => {
+        //   // Create a test fixture
+        //   const element = fixture('ChangedPropertyTestFixture');
+        //   assert.equal(element.prop1, 'new-prop1');
+        //   const elementShadowRoot = element.shadowRoot;
+        //   const elementHeader = elementShadowRoot.querySelector('h2');
+        //   assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+        // });
 
       });
     </script>

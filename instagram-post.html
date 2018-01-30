@@ -310,6 +310,7 @@
     }
 
     _observerInstagramAjax(res) {
+      if (!res) return;
       let graphql = res.graphql.shortcode_media;
       this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
       this.set('_authorId', graphql.owner.username);
@@ -322,6 +323,7 @@
       this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
       this.set('_verified', graphql.owner.is_verified);
       this.set('_loaded', true);
+      this.dispatchEvent(new CustomEvent('test-event', {detail: 'tested!'}));
     }
     /**
      * Builds a URL for links to post author's Instagram page
