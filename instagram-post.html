@@ -195,7 +195,7 @@
           <img id="instagramAvatar" alt$=[[_authorId]]>
         </a>
         <a class="instagram-username" href$=[[_authorUrl]] target="_blank">
-          [[_authorId]]
+          <span>[[_authorId]]</span>
         </a>
         <template is="dom-if" if="[[_verified]]">
           <span class="instagram-verified">
@@ -204,7 +204,7 @@
       </div>
       <template is="dom-if" if="[[_loaded]]">
         <template is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-          <instagram-post-image image=[[_instaObject.imgSrc]]>
+          <instagram-post-image image="[[_instaObject.imgSrc]]">
           </instagram-post-image>
         </template>
         <template is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
@@ -276,7 +276,8 @@
         * _loaded: Set true when received POST data from Instagram
         */
         _loaded: {
-          type: String
+          type: Boolean,
+          value: false
         },
         /**
         * _instaObject: Container for post details
