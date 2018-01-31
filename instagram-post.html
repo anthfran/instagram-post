@@ -202,20 +202,18 @@
         </template>
         </span>
       </div>
-      <template is="dom-if" if="[[_loaded]]">
-        <template is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-          <instagram-post-image image="[[_instaObject.imgSrc]]">
-          </instagram-post-image>
-        </template>
-        <template is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
-          <instagram-post-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
-          </instagram-video>
-        </template>
+      <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
+        <instagram-post-image id="elementImage" image="[[_instaObject.imgSrc]]">
+        </instagram-post-image>
+      </template>
+      <template id="templateVideo" is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
+        <instagram-post-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
+        </instagram-video>
       </template>
       <div class="instagram-temp" hidden$=[[_loaded]]>
         <div class="instagram-logo"></div>
       </div>
-      <template is="dom-if" if="[[_loaded]]">
+      <div hidden$="[[!_loaded]]">
         <p class="instagram-textbox">
           <a class="instagram-text bolded black" href$=[[_instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
         </p>
@@ -225,7 +223,7 @@
         <p class="instagram-textbox">
           <a class="instagram-text gray" href$=[[_instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
         </p>
-      </template>
+      </div>
       <div class="instagram-footer">
         <a class="instagram-time gray" href="#">[[_humanDate]]</a>
         <span class="instagram-glyph"></span>
@@ -325,7 +323,7 @@
       this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
       this.set('_verified', graphql.owner.is_verified);
       this.set('_loaded', true);
-      this.dispatchEvent(new CustomEvent('test-event', {detail: 'ajax done!'}));
+      this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
     }
     /**
      * Builds a URL for links to post author's Instagram page
@@ -334,8 +332,7 @@
      * @return {String} URL of post author's page
      */
     _computeAuthorUrl(authorId) {
-      if (!authorId)
-      return;
+      if (!authorId) return;
       return 'https://www.instagram.com/' + authorId;
     }
     /**
@@ -346,8 +343,7 @@
      * @return {String} Human readable date
      */
     _computeHumanDate(timestamp) {
-      if (!timestamp)
-      return;
+      if (!timestamp) return;
       let postDate = new Date(timestamp*1000);
       let elapsedTime = new Date() - postDate
       if ( elapsedTime < 84400000*7) {
@@ -364,8 +360,7 @@
      * @return {String} URL of the post
      */
     _computeUrl(postid) {
-      if (!postid)
-        return;
+      if (!postid) return;
       return 'https://www.instagram.com/p/' + postid;
     }
     /**
@@ -376,8 +371,7 @@
      * @return {Boolean} True if Video, False if Image
      */
     _isVideo(graphType) {
-      if (!graphType)
-        return;
+      if (!graphType) return;
       if (graphType == 'GraphVideo')
         return true;
       else
