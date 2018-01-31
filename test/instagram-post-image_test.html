@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>instagram-post-image test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../instagram-post-image.html">
+  </head>
+  <body>
+    <test-fixture id="ImageElement">
+      <template>
+        <instagram-post-image image="https://instagram.ffco3-1.fna.fbcdn.net/vp/8c68d517c05cff4971406b849737d19f/5B022CF8/t51.2885-15/e35/26284024_190475038206650_1406701557235318784_n.jpg"></instagram-post>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('instagram-post-image', () => {
+        test('Test a single image post', () => {
+          const element = fixture('ImageElement');
+          const elementShadowRoot = element.shadowRoot;
+        });
+      });
+    </script>
+
+  </body>
+</html>
