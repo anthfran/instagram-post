@@ -27,10 +27,31 @@
 
     <script>
       suite('instagram-post', () => {
-        test('instantiating the element with default properties works', (done) => {
+        test('Test a single image post', (done) => {
           const element = fixture('InstagramImagePost');
+          const elementShadowRoot = element.shadowRoot;
+          /* Ensure postid is set correctly */
+          assert.equal(element.postid, 'BeY1pSzBl2f');
+          /* After Ajax is finished */
           element.addEventListener('test-event', function(event) {
-            assert.equal(event.detail, 'tested!');
+            assert.equal(event.detail, 'ajax done!');
+            /* validate if avatar correctly set */
+            const instagramAvatar = elementShadowRoot.querySelector('.instagram-avatar');
+            assert.equal(instagramAvatar.href, 'https://www.instagram.com/instagram');
+            const instagramAvatarImage = instagramAvatar.querySelector('img');
+            assert.equal(instagramAvatarImage.alt, 'instagram');
+            assert.equal(instagramAvatarImage.src, 'https://instagram.ffco3-1.fna.fbcdn.net/vp/77b28f9baf682fad4965464924ee7157/5B002F5B/t51.2885-19/s150x150/14719833_310540259320655_1605122788543168512_a.jpg');
+
+            /* validate if username in header is correctly set */
+            const instagramUsername = elementShadowRoot.querySelector('.instagram-username');
+            assert.equal(instagramUsername.href, 'https://www.instagram.com/instagram');
+            assert.equal(instagramUsername.innerHTML, '\n          instagram\n        ');
+
+            /* validate if verified flag is correctly set */
+            assert.equal(element._verified, true);
+
+
+
             done();
           });
           //          const myEl = element.shadowRoot;
