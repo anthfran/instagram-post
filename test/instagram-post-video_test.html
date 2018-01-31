@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>instagram-post-video test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../instagram-post-video.html">
+  </head>
+  <body>
+    <test-fixture id="VideoElement">
+      <template>
+        <instagram-post-video poster="https://instagram.ffco3-1.fna.fbcdn.net/vp/750e86c5f3a9c89775116b35d7bc090b/5A74195E/t51.2885-15/e15/26318910_1416488215143807_6707719123612205056_n.jpg"
+        video="https://instagram.ffco3-1.fna.fbcdn.net/vp/7ae13cd83b2e81d081ff4fb77775f4cd/5A7429E8/t50.2886-16/26085841_150815768970625_2583330886179094528_n.mp4">
+      </instagram-post>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('instagram-post-video', () => {
+        test('Test a video post element', () => {
+          const element = fixture('VideoElement');
+          const elementShadowRoot = element.shadowRoot;
+          const imgUrl = "https://instagram.ffco3-1.fna.fbcdn.net/vp/750e86c5f3a9c89775116b35d7bc090b/5A74195E/t51.2885-15/e15/26318910_1416488215143807_6707719123612205056_n.jpg";
+          const videoUrl = "https://instagram.ffco3-1.fna.fbcdn.net/vp/7ae13cd83b2e81d081ff4fb77775f4cd/5A7429E8/t50.2886-16/26085841_150815768970625_2583330886179094528_n.mp4";
+          /* validate postid is set correctly */
+          assert.equal(element.poster, imgUrl);
+          assert.equal(element.video, videoUrl);
+
+          /* validate poster source set correctly */
+          const video = elementShadowRoot.querySelector('#instagramVideo');
+          assert.equal(video.poster, imgUrl);
+          assert.equal(video.src, videoUrl);
+        });
+      });
+    </script>
+
+  </body>
+</html>
