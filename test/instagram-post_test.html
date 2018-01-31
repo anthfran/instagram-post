@@ -8,36 +8,47 @@
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
-
     <link rel="import" href="../instagram-post.html">
   </head>
   <body>
 
-    <test-fixture id="InstagramImagePost">
+    <test-fixture id="ImagePost">
       <template>
         <instagram-post postid="BeY1pSzBl2f"></instagram-post>
       </template>
     </test-fixture>
 
-    <!-- <test-fixture id="ChangedPropertyTestFixture">
+    <test-fixture id="VideoPost">
       <template>
-        <instagram-post prop1="new-prop1"></instagram-post>
+        <instagram-post postid="BeJndN2DuZ6"></instagram-post>
       </template>
-    </test-fixture> -->
+    </test-fixture>
+
+    <test-fixture id="InvalidPostId">
+      <template>
+        <instagram-post postid="XXXXXXXXX"></instagram-post>
+      </template>
+    </test-fixture>
 
     <script>
       suite('instagram-post', () => {
         test('Test a single image post', (done) => {
-          const element = fixture('InstagramImagePost');
+          const element = fixture('ImagePost');
           const elementShadowRoot = element.shadowRoot;
-          /* Ensure postid is set correctly */
+
+          /* validate postid is set correctly */
           assert.equal(element.postid, 'BeY1pSzBl2f');
-          /* After Ajax is finished */
+
+          /* Run tests after Ajax is finished */
           element.addEventListener('test-event', function(event) {
-            assert.equal(event.detail, 'ajax done!');
-            /* validate if avatar correctly set */
+            /* received event from ajax finishing */
+            assert.equal(event.detail, 'ready');
+
+            /* validate if avatar link correctly set */
             const instagramAvatar = elementShadowRoot.querySelector('.instagram-avatar');
             assert.equal(instagramAvatar.href, 'https://www.instagram.com/instagram');
+
+            /* validate if avatar image correctly set */
             const instagramAvatarImage = instagramAvatar.querySelector('img');
             assert.equal(instagramAvatarImage.alt, 'instagram');
             assert.equal(instagramAvatarImage.src, 'https://instagram.ffco3-1.fna.fbcdn.net/vp/77b28f9baf682fad4965464924ee7157/5B002F5B/t51.2885-19/s150x150/14719833_310540259320655_1605122788543168512_a.jpg');
@@ -45,30 +56,19 @@
             /* validate if username in header is correctly set */
             const instagramUsername = elementShadowRoot.querySelector('.instagram-username');
             assert.equal(instagramUsername.href, 'https://www.instagram.com/instagram');
-            assert.equal(instagramUsername.innerHTML, '\n          instagram\n        ');
+            assert.equal(instagramUsername.querySelector('span').innerHTML, 'instagram');
 
             /* validate if verified flag is correctly set */
             assert.equal(element._verified, true);
 
-
+            /* validate if verified image source is correctly set */
+            assert.equal(element._instaObject.imgSrc, 'https://instagram.ffco3-1.fna.fbcdn.net/vp/8c68d517c05cff4971406b849737d19f/5B022CF8/t51.2885-15/e35/26284024_190475038206650_1406701557235318784_n.jpg');
+            /* validate if verified image source is correctly set */
+            assert.equal(element._instaObject.graphType, 'GraphImage');
 
             done();
           });
-          //          const myEl = element.shadowRoot;
-
-          // const elementHeader = elementShadowRoot.querySelector('h2');
-          // assert.equal(elementHeader.innerHTML, 'Hello instagram-post!');
         });
-
-        // test('setting a property on the element works', () => {
-        //   // Create a test fixture
-        //   const element = fixture('ChangedPropertyTestFixture');
-        //   assert.equal(element.prop1, 'new-prop1');
-        //   const elementShadowRoot = element.shadowRoot;
-        //   const elementHeader = elementShadowRoot.querySelector('h2');
-        //   assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
-        // });
-
       });
     </script>
 
