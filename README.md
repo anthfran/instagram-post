@@ -1,4 +1,4 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/anthfran/polymer-instagram-post)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/anthfran/instagram-post)
 
 # \<instagram-post\>
 
@@ -6,7 +6,7 @@ Display an Instagram image post in your Polymer website
 
 ## Demo
 
-https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/index.html
+https://www.webcomponents.org/element/anthfran/instagram-post/demo/demo/index.html
 
 ## Installation
 
