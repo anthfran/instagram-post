@@ -10,7 +10,7 @@ https://www.webcomponents.org/element/anthfran/polymer-instagram-post/demo/demo/
 
 ## Installation
 
-`bower install --save anthfran/polymer-instagram-post`
+`bower install --save anthfran/instagram-post`
 
 ## Usage
 
