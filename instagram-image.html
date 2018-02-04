@@ -1,0 +1,81 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="instagram-image">
+  <template>
+    <style>
+    :host([hidden]) {
+      display: none;
+      --gallery-icon-opacity: 1;
+      --gallery-arrows-opacity: 0;
+    }
+    .instagram-image {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .instagram-image img {
+      width:100%;
+    }
+    .transition {
+      transition-property: opacity;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-out;
+      transition-delay: .1s;
+    }
+    .instagram-gallery-icon {
+         display: block;
+         position: absolute;
+         right: 3px;
+         top: -1px;
+         height: 47px;
+         width: 47px;
+         background-image: url(fb48443ec9d3.png);
+         background-position: -238px -251px;
+         opacity: var(--gallery-icon-opacity);
+       }
+    </style>
+    <div class="instagram-image" on-mouseover="_imageHover" on-mouseout="_imageUnhover">
+      <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
+        <img id="instagramImage" class="instagram-image" >
+      </a>
+      <div class="instagram-gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover"></div>
+    </div>
+  </template>
+  <script>
+  /**
+  * `instagram-post-image`
+  * Display an Instagram post in your Polymer website
+  *
+  * @customElement
+  * @polymer
+  */
+  class InstagramPostImage extends Polymer.Element {
+    static get is() { return 'instagram-image'; }
+    static get properties() {
+      return {
+        /**
+        * _authorId: Author ID of the Instagram post
+        * @type {String}
+        */
+        image: {
+          type: String,
+          observer: '_loadImage'
+        }
+      };
+    }
+    _loadImage() {
+      this.$.instagramImage.src = this.image;
+    }
+    _imageHover() {
+      this.updateStyles({'--gallery-icon-opacity': 0});
+      this.updateStyles({'--gallery-arrows-opacity': 1});
+    }
+    _imageUnhover() {
+      this.updateStyles({'--gallery-icon-opacity': 1});
+      this.updateStyles({'--gallery-arrows-opacity': 0});
+    }
+  }
+
+  window.customElements.define(InstagramPostImage.is, InstagramPostImage);
+  </script>
+</dom-module>

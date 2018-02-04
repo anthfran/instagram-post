@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
-<dom-module id="instagram-post-video">
+<dom-module id="instagram-video">
   <template>
     <style>
     :host([hidden]) {
@@ -49,7 +49,7 @@
     <div class="instagram-video">
       <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
       <div class="instagram-playbutton transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
-      <div class="instagram-video-icon instagram-transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+      <div class="instagram-video-icon transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
     </div>
   </template>
   <script>
@@ -61,7 +61,7 @@
   * @polymer
   */
   class InstagramPostVideo extends Polymer.Element {
-    static get is() { return 'instagram-post-video'; }
+    static get is() { return 'instagram-video'; }
     static get properties() {
       return {
         poster: {

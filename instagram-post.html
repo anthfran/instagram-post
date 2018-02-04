@@ -1,8 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
-<link rel="import" href="./instagram-post-image.html">
-<link rel="import" href="./instagram-post-video.html">
+<link rel="import" href="./instagram-image.html">
+<link rel="import" href="./instagram-video.html">
 
 <dom-module id="instagram-post">
   <template>
@@ -204,11 +204,11 @@
         </span>
       </div>
       <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-        <instagram-post-image id="elementImage" image="[[_instaObject.imgSrc]]">
-        </instagram-post-image>
+        <instagram-image id="elementImage" image="[[_instaObject.imgSrc]]">
+        </instagram-image>
       </template>
       <template id="templateVideo" is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
-        <instagram-post-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
+        <instagram-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
         </instagram-video>
       </template>
       <div class="instagram-temp" hidden$=[[_loaded]]>
