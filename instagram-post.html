@@ -312,12 +312,17 @@
 
     _observerInstagramAjax(res) {
       if (!res) return;
-      console.log(res);
       let graphql = res.graphql.shortcode_media;
       // console.log(graphql);
       this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+      if (!graphql.edge_sidecar_to_children) {
+        this.set('_instaObject.imgSrc', [graphql.display_url]);
+      } else {
+        this.set('_instaObject.imgSrc', [graphql.display_url]);
+      }
+
+
       this.set('_authorId', graphql.owner.username);
-      this.set('_instaObject.imgSrc', [graphql.display_url]);
       this.set('_instaObject.videoSrc', graphql.video_url);
       this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
       this.set('_instaObject.graphType', graphql.__typename);

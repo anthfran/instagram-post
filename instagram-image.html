@@ -80,6 +80,7 @@
       this.updateStyles({'--gallery-arrows-opacity': 0});
     }
     _observerImage(image) {
+      console.log(image);
       if (image.length > 1) {
         this.set('singleImage', false);
       }
