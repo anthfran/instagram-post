@@ -3,10 +3,12 @@
 <dom-module id="instagram-image">
   <template>
     <style>
-    :host([hidden]) {
-      display: none;
+    :host() {
       --gallery-icon-opacity: 1;
       --gallery-arrows-opacity: 0;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .instagram-image {
       width: 100%;
@@ -23,7 +25,6 @@
       transition-delay: .1s;
     }
     .instagram-gallery-icon {
-         display: block;
          position: absolute;
          right: 3px;
          top: -1px;
@@ -38,7 +39,7 @@
       <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
         <img id="instagramImage" class="instagram-image" >
       </a>
-      <div class="instagram-gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover"></div>
+      <div class="instagram-gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover" hidden$=[[singleImage]]></div>
     </div>
   </template>
   <script>
@@ -59,12 +60,16 @@
         */
         image: {
           type: String,
-          observer: '_loadImage'
+          observer: '_observerImage'
+        },
+        singleImage: {
+          type: Boolean,
+          value: true
         }
       };
     }
-    _loadImage() {
-      this.$.instagramImage.src = this.image;
+    _loadImage(image) {
+      this.$.instagramImage.src = image;
     }
     _imageHover() {
       this.updateStyles({'--gallery-icon-opacity': 0});
@@ -73,6 +78,12 @@
     _imageUnhover() {
       this.updateStyles({'--gallery-icon-opacity': 1});
       this.updateStyles({'--gallery-arrows-opacity': 0});
+    }
+    _observerImage(image) {
+      if (image.length > 1) {
+        this.set('singleImage', false);
+      }
+      this._loadImage(image[0]);
     }
   }
 

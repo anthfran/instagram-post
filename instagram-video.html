@@ -3,10 +3,12 @@
 <dom-module id="instagram-video">
   <template>
     <style>
-    :host([hidden]) {
-      display: none;
+    :host() {
       --playbutton-opacity: 0;
       --video-icon-opacity: 1;
+    }
+    :host([hidden]) {
+      display: none;
     }
     .instagram-playbutton {
       display: block;
