@@ -95,7 +95,7 @@
         </div>
         <div class="instagram-image-indicator">
           <template is="dom-repeat" items="[[imageurls]]" restamp="true">
-            <div class="instagram-image-circle" style$="[[_computeIndexOpacity(index)]]"></div>
+            <div class="instagram-image-circle" style$="[[_computeIndexOpacity(index, _currentImage)]]"></div>
           </template>
         </div>
       </template>
@@ -152,7 +152,9 @@
     }
     _clickRight() {
       let imageToDisplay = this._currentImage+1;
-      console.log(imageToDisplay);
+      if (imageToDisplay > this.imageurls.length-1) return;
+      this._loadImage(this._imageData[imageToDisplay].src);
+      this.set("_currentImage", imageToDisplay);
       if (imageToDisplay > 0) {
         this.set('_arrowHide.left', false);
         this.updateStyles({'--left-arrow-opacity': 0.75});
@@ -160,41 +162,35 @@
       if (imageToDisplay == this.imageurls.length-1) {
         this.set('_arrowHide.right', true);
       }
-      this._loadImage(this._imageData[imageToDisplay].src);
-      this.set("_currentImage", imageToDisplay);
     }
     _clickLeft() {
       let imageToDisplay = this._currentImage-1;
-      console.log(imageToDisplay);
+      if (imageToDisplay < 0) return;
+      this._loadImage(this._imageData[imageToDisplay].src);
+      this.set("_currentImage", imageToDisplay);
       if (imageToDisplay == 0) {
         this.set('_arrowHide.left', true);
       }
       if (imageToDisplay < this.imageurls.length-1) {
         this.set('_arrowHide.right', false);
       }
-      this._loadImage(this._imageData[imageToDisplay].src);
-      this.set("_currentImage", imageToDisplay);
     }
     _observerImage(image) {
-      console.log(image);
       let imageCount = image.length;
       let preloads = [];
 
       for (let i=0; i<imageCount; i++) {
         let imgData = new Image();
         imgData.src = image[i];
-        console.log(imgData);
-        if (i==0)
-          this._loadImage(image[0]);
+        if (i==0) this._loadImage(image[0]);
         preloads.push(imgData);
       }
-
       this.set('_imageData', preloads);
       if (imageCount > 1)
         this.set('_singleImage', false);
     }
-    _computeIndexOpacity(index) {
-      if (index == this._currentImage) return "opacity: 1";
+    _computeIndexOpacity(index, _currentImage) {
+      if (index == _currentImage) return "opacity: 1";
       else return "opacity: 0.4";
     }
     connectedCallback() {
