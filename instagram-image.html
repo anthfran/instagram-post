@@ -10,51 +10,6 @@
     :host([hidden]) {
       display: none;
     }
-    .instagram-image {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-    .instagram-image img {
-      width:100%;
-    }
-    .transition {
-      transition-property: opacity;
-      transition-duration: 0.3s;
-      transition-timing-function: ease-out;
-      transition-delay: .1s;
-    }
-    .instagram-gallery-icon {
-      position: absolute;
-      right: 3px;
-      top: -1px;
-      height: 47px;
-      width: 47px;
-      background-image: url(fb48443ec9d3.png);
-      background-position: -238px -251px;
-      opacity: var(--gallery-icon-opacity);
-    }
-    .instagram-image-indicator {
-      position: absolute;
-      bottom: 15px;
-      left: 6px;
-      right: 6px;
-      -webkit-box-align: center;
-      -webkit-align-items: center;
-      -ms-flex-align: center;
-      text-align: center;
-    }
-    .instagram-image-circle {
-      display: inline-block;
-      border-radius: 50%;
-      height: 6px;
-      margin-left: 2px;
-      margin-right: 2px;
-      -webkit-transition: all .2s ease-in-out;
-      transition: all .2s ease-in-out;
-      width: 6px;
-      background: #fff;
-    }
     .changeImageButton {
       height: 30px;
       width: 30px;
@@ -80,22 +35,66 @@
       background-size: 429px 398px;
       background-position: -113px -310px;
       opacity: var(--arrow-opacity);
-
+    }
+    .gallery-icon {
+      position: absolute;
+      right: 3px;
+      top: -1px;
+      height: 47px;
+      width: 47px;
+      background-image: url(fb48443ec9d3.png);
+      background-position: -238px -251px;
+      opacity: var(--gallery-icon-opacity);
+    }
+    .image {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .image img {
+      width:100%;
+    }
+    .image-circle {
+      display: inline-block;
+      border-radius: 50%;
+      height: 6px;
+      margin-left: 2px;
+      margin-right: 2px;
+      -webkit-transition: all .2s ease-in-out;
+      transition: all .2s ease-in-out;
+      width: 6px;
+      background: #fff;
+    }
+    .image-indicator {
+      position: absolute;
+      bottom: 15px;
+      left: 6px;
+      right: 6px;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      text-align: center;
+    }
+    .transition {
+      transition-property: opacity;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-out;
+      transition-delay: .1s;
     }
     </style>
-    <div class="instagram-image" on-mouseover="_imageHover" on-mouseout="_imageUnhover">
+    <div class="image" on-mouseover="_imageHover" on-mouseout="_imageUnhover">
       <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
-        <img id="instagramImage" class="instagram-image" >
+        <img id="instagramImage" class="image" >
       </a>
       <template is="dom-if" if=[[!_singleImage]] restamp="true">
-        <div class="instagram-gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover"></div>
+        <div class="gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover"></div>
         <div class="changeImageButton transition chevronRight" on-click="_clickRight" hidden$=[[_arrowHide.right]]>
         </div>
         <div class="changeImageButton transition chevronLeft" on-click="_clickLeft" hidden$=[[_arrowHide.left]]>
         </div>
-        <div class="instagram-image-indicator">
+        <div class="image-indicator">
           <template is="dom-repeat" items="[[imageurls]]" restamp="true">
-            <div class="instagram-image-circle" style$="[[_computeIndexOpacity(index, _currentImage)]]"></div>
+            <div class="image-circle" style$="[[_computeIndexOpacity(index, _currentImage)]]"></div>
           </template>
         </div>
       </template>
@@ -114,22 +113,37 @@
     static get is() { return 'instagram-image'; }
     static get properties() {
       return {
+        /**
+        * imageurls: array of image url's
+        */
         imageurls: {
-          type: String,
+          type: Array,
           observer: '_observerImage'
         },
+        /**
+        * _currentImage: array index of current image
+        */
         _currentImage: {
           type: Number,
           value: 0
         },
+        /**
+        * _singleImage: hides gallery features if there is only a single image
+        */
         _singleImage: {
           type: Boolean,
           value: true
         },
+        /**
+        * _imageData: array of pre-loaded <img> elements for better responsiveness
+        */
         _imageData: {
           type: Array,
           value: []
         },
+        /**
+        * _arrowHide: hides the left when at the first image, right arrow when at the last image
+        */
         _arrowHide: {
           type: Object,
           value: {
@@ -139,17 +153,26 @@
         }
       };
     }
-    _loadImage(image) {
-      this.$.instagramImage.src = image.src;
+    /**
+     * Triggers when the user clicks through images, changing the _currentImage
+     * If the index of the circle matches the _currentImage, returns opacity of 1.
+     * All other images receive a lower opacity.
+     *
+     * @param {Number} index the index of the circle in the bottom indicator
+     * @param {Number} _currentImage the index number of the current image being displayed
+     */
+    _computeIndexOpacity(index, _currentImage) {
+      if (index == _currentImage) return "opacity: 1";
+      else return "opacity: 0.4";
     }
-    _imageHover() {
-      this.updateStyles({'--gallery-icon-opacity': 0});
-      this.updateStyles({'--arrow-opacity': 0.75});
-    }
-    _imageUnhover() {
-      this.updateStyles({'--gallery-icon-opacity': 1});
-      this.updateStyles({'--arrow-opacity': 0});
-    }
+    /**
+     * Triggers when user clicks on the right arrow
+     * Updates the current image to the next one
+     * Preloads the next image
+     * Enables the left arrow, if the previous image was the first
+     * Disables the right arrow, if the new image to display is the last
+     *
+     */
     _clickRight() {
       let imageToDisplay = this._currentImage+1;
       if (imageToDisplay > this.imageurls.length-1) return;
@@ -164,6 +187,13 @@
         this.set('_arrowHide.right', true);
       }
     }
+    /**
+     * Triggers when user clicks on the right arrow
+     * Updates the current image to the previous one
+     * Enables the right arrow, if the previous image was the last
+     * Disables the left arrow, if the new image to display is the first
+     *
+     */
     _clickLeft() {
       let imageToDisplay = this._currentImage-1;
       if (imageToDisplay < 0) return;
@@ -176,6 +206,33 @@
         this.set('_arrowHide.right', false);
       }
     }
+    /**
+     * When hovering over the image, hides the gallery icon and shows the arrows
+     *
+     */
+    _imageHover() {
+      this.updateStyles({'--gallery-icon-opacity': 0});
+      this.updateStyles({'--arrow-opacity': 0.75});
+    }
+    /**
+     * When unhovering over the image, shows the gallery icon and hides the arrows
+     *
+     */
+    _imageUnhover() {
+      this.updateStyles({'--gallery-icon-opacity': 1});
+      this.updateStyles({'--arrow-opacity': 0});
+    }
+    /**
+     * Loads an image from the preloaded array into the
+     *
+     */
+    _loadImage(image) {
+      this.$.instagramImage.src = image.src;
+    }
+    /**
+     * Pre-loads the next image into the array
+     *
+     */
     _loadNextImage() {
       if (this.imageurls.length > this._imageData.length) {
         let imgData = new Image();
@@ -183,6 +240,11 @@
         this.push('_imageData', imgData);
       }
     }
+    /**
+     * Initialization, triggers when imageurls is set
+     * Loads first and second images into the pre-loaded array
+     * If there are many images in the imageurls array, sets the singleImage flag to False
+     */
     _observerImage(image) {
       let imageCount = image.length;
       let preloads = [];
@@ -198,11 +260,6 @@
           loadNextImage;
         }
       }
-
-    }
-    _computeIndexOpacity(index, _currentImage) {
-      if (index == _currentImage) return "opacity: 1";
-      else return "opacity: 0.4";
     }
     connectedCallback() {
       super.connectedCallback();

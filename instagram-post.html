@@ -294,7 +294,11 @@
         }
       };
     }
-
+    /**
+     * Triggers when iron-ajax receives a response, load variable
+     *
+     * @param {Object} _instaRes contains the full object from Instagram
+     */
     _observerInstagramAjax(res) {
       if (!res) return;
       let graphql = res.graphql.shortcode_media;

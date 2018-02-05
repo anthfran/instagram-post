@@ -10,7 +10,7 @@
     :host([hidden]) {
       display: none;
     }
-    .instagram-playbutton {
+    .playbutton {
       display: block;
       height: 135px;
       left: 50%;
@@ -30,12 +30,12 @@
       transition-timing-function: ease-out;
       transition-delay: .1s;
     }
-    .instagram-video {
+    .video {
       width: 100%;
       height: 100%;
       position: relative;
     }
-    .instagram-video-icon {
+    .video-icon {
          display: block;
          position: absolute;
          right: 3px;
@@ -48,10 +48,10 @@
          opacity: var(--video-icon-opacity);
        }
     </style>
-    <div class="instagram-video">
+    <div class="video">
       <video id="instagramVideo" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover" width="100%" loop preload="none" type="video/mp4" ></video>
-      <div class="instagram-playbutton transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
-      <div class="instagram-video-icon transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+      <div class="playbutton transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
+      <div class="video-icon transition" on-click="_clickVideo" on-mouseover="_videoHover" on-mouseout="_videoUnhover"></div>
     </div>
   </template>
   <script>
@@ -66,16 +66,29 @@
     static get is() { return 'instagram-video'; }
     static get properties() {
       return {
+        /**
+        * poster: URL of image to be displayed before the video is played
+        */
         poster: {
           type: String,
           observer: '_loadImage'
         },
+        /**
+        * video: URL of video to be played
+        */
         video: {
           type: String,
           observer: '_loadVideo'
         },
       };
     }
+    /**
+     * Triggers when the user clicks the video.
+     * Starts playing or pausing the video
+     * Hides the button and video icon on play. Redisplays on pause
+     *
+     * @param {Object} e event Object from on-click listener
+     */
     _clickVideo(e) {
       if (!this._playing) {
         this.$.instagramVideo.play();
@@ -90,17 +103,32 @@
         this.set('_playing', false);
       }
     }
+    /**
+     * Loads image from parameters
+     *
+     */
     _loadImage() {
       this.$.instagramVideo.poster = this.poster;
     }
+    /**
+     * Loads video from parameters
+     *
+     */
     _loadVideo() {
       this.$.instagramVideo.src = this.video;
     }
+    /**
+     * Displays play button on hover
+     *
+     */
     _videoHover(){
       if (!this._playing)
       this.updateStyles({'--playbutton-opacity': 1});
     }
-
+    /**
+     * Hides play button on unhover
+     *
+     */
     _videoUnhover(){
       this.updateStyles({'--playbutton-opacity': 0});
     }
