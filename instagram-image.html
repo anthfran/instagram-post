@@ -5,8 +5,7 @@
     <style>
     :host() {
       --gallery-icon-opacity: 1;
-      --left-arrow-opacity: 0;
-      --right-arrow-opacity: 0;
+      --arrow-opacity: 0;
     }
     :host([hidden]) {
       display: none;
@@ -60,7 +59,6 @@
       height: 30px;
       width: 30px;
       cursor: pointer;
-      display: block;
       margin-left: 12px;
       margin-right: 12px;
       overflow: hidden;
@@ -74,14 +72,14 @@
       background-image: url(9e7638226e17.png);
       background-size: 429px 398px;
       background-position: -210px -134px;
-      opacity: var(--left-arrow-opacity);
+      opacity: var(--arrow-opacity);
     }
     .chevronRight {
       right: 0;
       background-image: url(9e7638226e17.png);
       background-size: 429px 398px;
       background-position: -113px -310px;
-      opacity: var(--right-arrow-opacity);
+      opacity: var(--arrow-opacity);
 
     }
     </style>
@@ -136,38 +134,46 @@
           type: Object,
           value: {
             left: true,
-            right: true
+            right: false
           }
         }
       };
     }
     _loadImage(image) {
-      console.log('loading image ' + image);
       this.$.instagramImage.src = image;
     }
     _imageHover() {
       this.updateStyles({'--gallery-icon-opacity': 0});
-      if (this._currentImage != 0)
-        this.updateStyles({'--left-arrow-opacity': 0.75});
-      if (this._currentImage != this.imageurls.length-1)
-        this.updateStyles({'--right-arrow-opacity': 0.75});
+      this.updateStyles({'--arrow-opacity': 0.75});
     }
     _imageUnhover() {
       this.updateStyles({'--gallery-icon-opacity': 1});
-      this.updateStyles({'--left-arrow-opacity': 0});
-      this.updateStyles({'--right-arrow-opacity': 0});
+      this.updateStyles({'--arrow-opacity': 0});
     }
     _clickRight() {
-      if (this._currentImage == this.imageurls.length-1) return;
-      this._loadImage(this._imageData[this._currentImage+1].src);
-      this.set("_currentImage", this._currentImage+1);
-      console.log('clicked right');
+      let imageToDisplay = this._currentImage+1;
+      console.log(imageToDisplay);
+      if (imageToDisplay > 0) {
+        this.set('_arrowHide.left', false);
+        this.updateStyles({'--left-arrow-opacity': 0.75});
+      }
+      if (imageToDisplay == this.imageurls.length-1) {
+        this.set('_arrowHide.right', true);
+      }
+      this._loadImage(this._imageData[imageToDisplay].src);
+      this.set("_currentImage", imageToDisplay);
     }
     _clickLeft() {
-      if (this._currentImage == 0) return;
-      this._loadImage(this._imageData[this._currentImage-1].src);
-      this.set("_currentImage", this._currentImage-1);
-      console.log('clicked left');
+      let imageToDisplay = this._currentImage-1;
+      console.log(imageToDisplay);
+      if (imageToDisplay == 0) {
+        this.set('_arrowHide.left', true);
+      }
+      if (imageToDisplay < this.imageurls.length-1) {
+        this.set('_arrowHide.right', false);
+      }
+      this._loadImage(this._imageData[imageToDisplay].src);
+      this.set("_currentImage", imageToDisplay);
     }
     _observerImage(image) {
       console.log(image);
