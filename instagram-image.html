@@ -177,10 +177,7 @@
       }
     }
     _loadNextImage() {
-      console.log(this.imageurls.length);
-      console.log(this._imageData.length);
       if (this.imageurls.length > this._imageData.length) {
-        console.log('load next image');
         let imgData = new Image();
         imgData.src = this.imageurls[this._imageData.length];
         this.push('_imageData', imgData);
