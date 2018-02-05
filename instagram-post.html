@@ -186,7 +186,7 @@
         </span>
       </div>
       <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-        <instagram-image id="elementImage" image="[[_instaObject.imgSrc]]">
+        <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
         </instagram-image>
       </template>
       <template id="templateVideo" is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
