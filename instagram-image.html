@@ -34,12 +34,41 @@
          background-position: -238px -251px;
          opacity: var(--gallery-icon-opacity);
        }
+       .instagram-image-indicator {
+         position: absolute;
+         bottom: 15px;
+         left: 6px;
+         right: 6px;
+         -webkit-box-align: center;
+          -webkit-align-items: center;
+          -ms-flex-align: center;
+          text-align: center;
+       }
+       .instagram-image-circle {
+         display: inline-block;
+         border-radius: 50%;
+          height: 6px;
+          margin-left: 2px;
+          margin-right: 2px;
+          -webkit-transition: all .2s ease-in-out;
+          transition: all .2s ease-in-out;
+          width: 6px;
+          background: #fff;
+       }
     </style>
     <div class="instagram-image" on-mouseover="_imageHover" on-mouseout="_imageUnhover">
       <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
         <img id="instagramImage" class="instagram-image" >
       </a>
       <div class="instagram-gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover" hidden$=[[singleImage]]></div>
+      <template is="dom-if" if=[[!singleImage]] restamp="true">
+        <div class="instagram-image-indicator">
+          <template is="dom-repeat" items="[[image]]">
+            <div class="instagram-image-circle" style$="[[_computeOpacity(index)]]"></div>
+          </template>
+        </div>
+      </template>
+
     </div>
   </template>
   <script>
@@ -54,10 +83,10 @@
     static get is() { return 'instagram-image'; }
     static get properties() {
       return {
-        /**
-        * _authorId: Author ID of the Instagram post
-        * @type {String}
-        */
+        currentImage: {
+          type: Number,
+          value: 0
+        },
         image: {
           type: String,
           observer: '_observerImage'
@@ -80,11 +109,16 @@
       this.updateStyles({'--gallery-arrows-opacity': 0});
     }
     _observerImage(image) {
-      console.log(image);
-      if (image.length > 1) {
+      this._loadImage(image[0]);
+      let imageCount = image.length;
+      if (imageCount > 1) {
         this.set('singleImage', false);
       }
-      this._loadImage(image[0]);
+    }
+    _computeOpacity(index) {
+      console.log(index);
+      if (index == this.currentImage) return "opacity: 1";
+      else return "opacity: 0.4";
     }
   }
 
