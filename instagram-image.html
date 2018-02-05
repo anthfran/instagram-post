@@ -140,7 +140,7 @@
       };
     }
     _loadImage(image) {
-      this.$.instagramImage.src = image;
+      this.$.instagramImage.src = image.src;
     }
     _imageHover() {
       this.updateStyles({'--gallery-icon-opacity': 0});
@@ -153,7 +153,7 @@
     _clickRight() {
       let imageToDisplay = this._currentImage+1;
       if (imageToDisplay > this.imageurls.length-1) return;
-      this._loadImage(this._imageData[imageToDisplay].src);
+      this._loadImage(this._imageData[imageToDisplay]);
       this.set("_currentImage", imageToDisplay);
       if (imageToDisplay > 0) {
         this.set('_arrowHide.left', false);
@@ -166,7 +166,7 @@
     _clickLeft() {
       let imageToDisplay = this._currentImage-1;
       if (imageToDisplay < 0) return;
-      this._loadImage(this._imageData[imageToDisplay].src);
+      this._loadImage(this._imageData[imageToDisplay]);
       this.set("_currentImage", imageToDisplay);
       if (imageToDisplay == 0) {
         this.set('_arrowHide.left', true);
@@ -182,7 +182,7 @@
       for (let i=0; i<imageCount; i++) {
         let imgData = new Image();
         imgData.src = image[i];
-        if (i==0) this._loadImage(image[0]);
+        if (i==0) this._loadImage(imgData);
         preloads.push(imgData);
       }
       this.set('_imageData', preloads);
