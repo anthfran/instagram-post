@@ -37,6 +37,8 @@ For example the post id for (https://www.instagram.com/p/BeY1pSzBl2f/) is BeY1pS
 <instagram-post postid="BeY1pSzBl2f"></instagram-post>
 ```
 ## History
+Feb  5, 2018 - v1.2.0 - Implemented multiple image posts
+
 Jan 29, 2018 - v1.1.0 - Implemented video support
 
 Jan 27, 2018 - v1.0.0 - First release. Only support for single image
