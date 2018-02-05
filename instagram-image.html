@@ -155,6 +155,7 @@
       if (imageToDisplay > this.imageurls.length-1) return;
       this._loadImage(this._imageData[imageToDisplay]);
       this.set("_currentImage", imageToDisplay);
+      this._loadNextImage()
       if (imageToDisplay > 0) {
         this.set('_arrowHide.left', false);
         this.updateStyles({'--left-arrow-opacity': 0.75});
@@ -175,19 +176,32 @@
         this.set('_arrowHide.right', false);
       }
     }
+    _loadNextImage() {
+      console.log(this.imageurls.length);
+      console.log(this._imageData.length);
+      if (this.imageurls.length > this._imageData.length) {
+        console.log('load next image');
+        let imgData = new Image();
+        imgData.src = this.imageurls[this._imageData.length];
+        this.push('_imageData', imgData);
+      }
+    }
     _observerImage(image) {
       let imageCount = image.length;
       let preloads = [];
-
-      for (let i=0; i<imageCount; i++) {
-        let imgData = new Image();
-        imgData.src = image[i];
-        if (i==0) this._loadImage(imgData);
-        preloads.push(imgData);
-      }
+      let imgData = new Image();
+      imgData.src = image[0];
+      this._loadImage(imgData);
+      preloads.push(imgData);
       this.set('_imageData', preloads);
-      if (imageCount > 1)
+      if (imageCount > 1) {
         this.set('_singleImage', false);
+        const loadNextImage = this._loadNextImage();
+        imgData.onload = function () {
+          loadNextImage;
+        }
+      }
+
     }
     _computeIndexOpacity(index, _currentImage) {
       if (index == _currentImage) return "opacity: 1";
