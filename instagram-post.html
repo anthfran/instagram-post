@@ -183,8 +183,10 @@
         </span>
       </div>
       <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-        <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
-        </instagram-image>
+        <a href$=[[_instagramUrl]]>
+          <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
+          </instagram-image>
+        </a>
       </template>
       <template id="templateVideo" is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
         <instagram-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>

@@ -83,9 +83,7 @@
     }
     </style>
     <div class="image" on-mouseover="_imageHover" on-mouseout="_imageUnhover">
-      <a href$=[[_instagramUrl]] hidden$=[[_isvideo]]>
-        <img id="instagramImage" class="image" >
-      </a>
+      <img id="instagramImage" class="image" >
       <template is="dom-if" if=[[!_singleImage]] restamp="true">
         <div class="gallery-icon transition" on-click="_clickVideo" on-mouseover="_imageHover" on-mouseout="_imageUnhover"></div>
         <div class="changeImageButton transition chevronRight" on-click="_clickRight" hidden$=[[_arrowHide.right]]>
