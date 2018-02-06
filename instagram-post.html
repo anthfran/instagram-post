@@ -111,7 +111,7 @@
     .temp {
       background:#F8F8F8;
       line-height:0;
-      padding:62.5% 0;
+      padding:50% 0;
       text-align:center;
       width:100%;
     }
@@ -183,7 +183,7 @@
         </span>
       </div>
       <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-        <a href$=[[_instagramUrl]]>
+        <a href$=[[_instagramUrl]] hidden$="[[!_loaded]]">
           <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
           </instagram-image>
         </a>
