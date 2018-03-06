@@ -259,13 +259,6 @@
           value: {}
         },
         /**
-        * _instaRes: Raw response from Instagram
-        */
-        _instaRes: {
-          type: Object,
-          observer: '_observerInstagramAjax'
-        },
-        /**
         * _instagramUrl: Computed URL of instagram post
         */
         _instagramUrl: {
@@ -327,36 +320,6 @@
         console.log("Fetch error", error);
       });
     }
-    // /**
-    //  * Triggers when iron-ajax receives a response, load variable
-    //  *
-    //  * @param {Object} _instaRes contains the full object from Instagram
-    //  */
-    // _observerInstagramAjax(res) {
-    //   if (!res) return;
-    //   let graphql = res.graphql.shortcode_media;
-    //   this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
-    //   if (!graphql.edge_sidecar_to_children) {
-    //     this.set('_instaObject.imgSrc', [graphql.display_url]);
-    //   } else {
-    //     let edges = graphql.edge_sidecar_to_children.edges;
-    //     let images = [];
-    //     for (let i = 0; i < edges.length; i++) {
-    //       images.push(edges[i].node.display_url);
-    //     }
-    //     this.set('_instaObject.imgSrc', images);
-    //   }
-    //   this.set('_authorId', graphql.owner.username);
-    //   this.set('_instaObject.videoSrc', graphql.video_url);
-    //   this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-    //   this.set('_instaObject.graphType', graphql.__typename);
-    //   this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
-    //   this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-    //   this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-    //   this.set('_verified', graphql.owner.is_verified);
-    //   this.set('_loaded', true);
-    //   this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
-    // }
     /**
      * Builds a URL for links to post author's Instagram page
      *
