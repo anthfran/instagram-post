@@ -242,17 +242,19 @@
     }
     _fetchPost(postId){
       const fetchUrl = "https://www.instagram.com/p/".concat(postId).concat("?__a=1");
-      const options = { method: 'GET', mode: 'cors', headers: { Accept: 'application/json' }};
+      const options = { method: 'GET', mode: 'cors', credentials: 'include', redirect: 'follow',
+      headers: {
+        'Access-Control-Allow-Credentials': true
+      }};
       fetch(fetchUrl, options)
       .then((response) => {
-        if (response.status >= 200 && response.status <= 300) return Promise.resolve(response);
-        else return Promise.reject(response);
-      })
-      .then((body) => {
-        return body.json()
+        console.log(response);
+        // if (response.ok) return Promise.resolve(response.json());
+        // else return Promise.reject(response);
       })
       .then((json) => {
         const graphql = json.graphql.shortcode_media;
+        console.log(graphql);
         this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
 
         let instaObject = {};
@@ -293,7 +295,7 @@
         this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
       })
       .catch((error) => {
-        console.log("Fetch error", error);
+        console.log(error);
       });
     }
     /**
