@@ -332,10 +332,11 @@
      */
     _computeHumanDate(timestamp) {
       if (!timestamp) return;
-      let postDate = new Date(timestamp*1000);
-      let elapsedTime = new Date() - postDate
-      if ( elapsedTime < 84400000*7) {
-        return Math.round(elapsedTime/84400000) + " days ago"
+      const postDate = new Date(timestamp*1000);
+      const elapsedTime = new Date() - postDate;
+      const sevenDays = 1000*60*60*24*7;
+      if ( elapsedTime < sevenDays) {
+        return Math.round(elapsedTime/sevenDays) + " days ago"
       } else {
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
         return postDate.toLocaleDateString("en-US",options)
