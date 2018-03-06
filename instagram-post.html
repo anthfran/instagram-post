@@ -1,5 +1,4 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../iron-ajax/iron-ajax.html">
 
 <link rel="import" href="./instagram-image.html">
 <link rel="import" href="./instagram-video.html">
@@ -160,14 +159,6 @@
       background-size: 74px 49px;
     }
     </style>
-    <iron-ajax
-      auto
-      url="[[_instagramUrl]]"
-      params='{"__a":"1"}'
-      handle-as="json"
-      last-response="{{_instaRes}}"
-      debounce-duration="300">
-    </iron-ajax>
 
     <blockquote class="instagram-container">
       <div class="header">
@@ -230,7 +221,8 @@
         * postid: ID of Instagram post
         */
         postid: {
-          type: String
+          type: String,
+          observer: '_fetchPost'
         },
         /**
         * _authorId: Author ID of the Instagram post
@@ -296,36 +288,75 @@
         }
       };
     }
-    /**
-     * Triggers when iron-ajax receives a response, load variable
-     *
-     * @param {Object} _instaRes contains the full object from Instagram
-     */
-    _observerInstagramAjax(res) {
-      if (!res) return;
-      let graphql = res.graphql.shortcode_media;
-      this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
-      if (!graphql.edge_sidecar_to_children) {
-        this.set('_instaObject.imgSrc', [graphql.display_url]);
-      } else {
-        let edges = graphql.edge_sidecar_to_children.edges;
-        let images = [];
-        for (let i = 0; i < edges.length; i++) {
-          images.push(edges[i].node.display_url);
+    _fetchPost(postId){
+      let fetchUrl = "https://www.instagram.com/p/".concat(postId).concat("?__a=1");
+      const options = { method: 'GET', mode: 'cors', headers: { Accept: 'application/json' }};
+      fetch(fetchUrl, options)
+      .then((response) => {
+        if (response.status >= 200 && response.status <= 300) return Promise.resolve(response);
+        else return Promise.reject(response);
+      })
+      .then((body) => {
+        return body.json();
+      })
+      .then((json) => {
+        let graphql = json.graphql.shortcode_media;
+        this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+        if (!graphql.edge_sidecar_to_children) {
+          this.set('_instaObject.imgSrc', [graphql.display_url]);
+        } else {
+          let edges = graphql.edge_sidecar_to_children.edges;
+          let images = [];
+          for (let i = 0; i < edges.length; i++) {
+            images.push(edges[i].node.display_url);
+          }
+          this.set('_instaObject.imgSrc', images);
         }
-        this.set('_instaObject.imgSrc', images);
-      }
-      this.set('_authorId', graphql.owner.username);
-      this.set('_instaObject.videoSrc', graphql.video_url);
-      this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-      this.set('_instaObject.graphType', graphql.__typename);
-      this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
-      this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-      this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-      this.set('_verified', graphql.owner.is_verified);
-      this.set('_loaded', true);
-      this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
+        this.set('_authorId', graphql.owner.username);
+        this.set('_instaObject.videoSrc', graphql.video_url);
+        this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
+        this.set('_instaObject.graphType', graphql.__typename);
+        this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
+        this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+        this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+        this.set('_verified', graphql.owner.is_verified);
+        this.set('_loaded', true);
+        this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
+      })
+      .catch((error) => {
+        console.log("Fetch error", error);
+      });
     }
+    // /**
+    //  * Triggers when iron-ajax receives a response, load variable
+    //  *
+    //  * @param {Object} _instaRes contains the full object from Instagram
+    //  */
+    // _observerInstagramAjax(res) {
+    //   if (!res) return;
+    //   let graphql = res.graphql.shortcode_media;
+    //   this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+    //   if (!graphql.edge_sidecar_to_children) {
+    //     this.set('_instaObject.imgSrc', [graphql.display_url]);
+    //   } else {
+    //     let edges = graphql.edge_sidecar_to_children.edges;
+    //     let images = [];
+    //     for (let i = 0; i < edges.length; i++) {
+    //       images.push(edges[i].node.display_url);
+    //     }
+    //     this.set('_instaObject.imgSrc', images);
+    //   }
+    //   this.set('_authorId', graphql.owner.username);
+    //   this.set('_instaObject.videoSrc', graphql.video_url);
+    //   this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
+    //   this.set('_instaObject.graphType', graphql.__typename);
+    //   this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
+    //   this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+    //   this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+    //   this.set('_verified', graphql.owner.is_verified);
+    //   this.set('_loaded', true);
+    //   this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
+    // }
     /**
      * Builds a URL for links to post author's Instagram page
      *
