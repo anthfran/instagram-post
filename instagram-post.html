@@ -162,19 +162,19 @@
 
     <blockquote class="instagram-container">
       <div class="header">
-        <a class="avatar" href$=[[_authorUrl]] target="_blank">
-          <img id="instagramAvatar" alt$=[[_authorId]]>
+        <a class="avatar" href$=[[_instaObject.authorUrl]] target="_blank">
+          <img id="instagramAvatar" alt$=[[_instaObject.authorId]]>
         </a>
-        <a class="username" href$=[[_authorUrl]] target="_blank">
-          <span>[[_authorId]]</span>
+        <a class="username" href$=[[_instaObject.authorUrl]] target="_blank">
+          <span>[[_instaObject.authorId]]</span>
         </a>
-        <template is="dom-if" if="[[_verified]]">
+        <template is="dom-if" if="[[_instaObject.verified]]">
           <span class="verified">
         </template>
         </span>
       </div>
       <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
-        <a href$=[[_instagramUrl]] hidden$="[[!_loaded]]">
+        <a href$=[[_instaObject.postUrl]] hidden$="[[!_loaded]]">
           <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
           </instagram-image>
         </a>
@@ -188,17 +188,17 @@
       </div>
       <div hidden$="[[!_loaded]]">
         <p class="textbox">
-          <a class="text bolded black" href$=[[_instagramUrl]] target="_blank">[[_instaObject.likes]] likes</a>
+          <a class="text bolded black" href$=[[_instaObject.postUrl]] target="_blank">[[_instaObject.likes]] likes</a>
         </p>
         <p class="textbox">
-          <a href$=[[_authorUrl]] class="author" target="_blank">[[_authorId]]</a> <a class="text black" href$=[[_instagramUrl]] target="_blank">[[_instaObject.instagramText]]</a>
+          <a href$=[[_instaObject.authorUrl]] class="author" target="_blank">[[_instaObject.authorId]]</a> <a class="text black" href$=[[_instaObject.postUrl]] target="_blank">[[_instaObject.instagramText]]</a>
         </p>
         <p class="textbox">
-          <a class="text gray" href$=[[_instagramUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
+          <a class="text gray" href$=[[_instaObject.postUrl]] target="_blank">view all [[_instaObject.comments]] comments</a>
         </p>
       </div>
       <div class="footer">
-        <a class="time gray" href="#">[[_humanDate]]</a>
+        <a class="time gray" href="#">[[_instaObject.date]]</a>
         <span class="glyph"></span>
       </div>
     </blockquote>
@@ -225,26 +225,6 @@
           observer: '_fetchPost'
         },
         /**
-        * _authorId: Author ID of the Instagram post
-        */
-        _authorId: {
-          type: String
-        },
-        /**
-        * _authorUrl: Computed URL leading to author's Instagram page
-        */
-        _authorUrl: {
-          type: String,
-          computed: '_computeAuthorUrl(_authorId)'
-        },
-        /**
-        * _humanDate: Computed Human readable date
-        */
-        _humanDate: {
-          type: String,
-          computed: '_computeHumanDate(_instaObject.timestamp)'
-        },
-        /**
         * _loaded: Set true when received POST data from Instagram
         */
         _loaded: {
@@ -257,25 +237,11 @@
         _instaObject: {
           type: Object,
           value: {}
-        },
-        /**
-        * _instagramUrl: Computed URL of instagram post
-        */
-        _instagramUrl: {
-          type: String,
-          computed: '_computeUrl(postid)'
-        },
-        /**
-        * _verified: Wether user is a verified user and enables the checkmark to be displayed
-        */
-        _verified: {
-          type: Boolean,
-          value: false
         }
       };
     }
     _fetchPost(postId){
-      let fetchUrl = "https://www.instagram.com/p/".concat(postId).concat("?__a=1");
+      const fetchUrl = "https://www.instagram.com/p/".concat(postId).concat("?__a=1");
       const options = { method: 'GET', mode: 'cors', headers: { Accept: 'application/json' }};
       fetch(fetchUrl, options)
       .then((response) => {
@@ -283,74 +249,52 @@
         else return Promise.reject(response);
       })
       .then((body) => {
-        return body.json();
+        return body.json()
       })
       .then((json) => {
-        let graphql = json.graphql.shortcode_media;
+        const graphql = json.graphql.shortcode_media;
         this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
+
+        let instaObject = {};
         if (!graphql.edge_sidecar_to_children) {
-          this.set('_instaObject.imgSrc', [graphql.display_url]);
+          instaObject.imgSrc = [graphql.display_url];
         } else {
-          let edges = graphql.edge_sidecar_to_children.edges;
-          let images = [];
+          const edges = graphql.edge_sidecar_to_children.edges;
+          instaObject.imgSrc = [];
           for (let i = 0; i < edges.length; i++) {
-            images.push(edges[i].node.display_url);
+            instaObject.imgSrc.push(edges[i].node.display_url);
           }
-          this.set('_instaObject.imgSrc', images);
         }
-        this.set('_authorId', graphql.owner.username);
-        this.set('_instaObject.videoSrc', graphql.video_url);
-        this.set('_instaObject.instagramText', graphql.edge_media_to_caption.edges[0].node.text);
-        this.set('_instaObject.graphType', graphql.__typename);
-        this.set('_instaObject.timestamp', graphql.taken_at_timestamp);
-        this.set('_instaObject.likes', graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-        this.set('_instaObject.comments', graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-        this.set('_verified', graphql.owner.is_verified);
+        function computeHumanDate(timestamp) {
+          if (!timestamp) return;
+          const postDate = new Date(timestamp*1000);
+          const elapsedTime = new Date() - postDate;
+          const sevenDays = 1000*60*60*24*7;
+          if ( elapsedTime < sevenDays) {
+            return Math.round(elapsedTime/sevenDays) + " days ago"
+          } else {
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return postDate.toLocaleDateString("en-US",options)
+          }
+        }
+
+        instaObject.authorId = graphql.owner.username;
+        instaObject.authorUrl = "https://www.instagram.com/".concat(graphql.owner.username);
+        instaObject.postUrl = "https://www.instagram.com/p/".concat(postId);
+        instaObject.videoSrc = graphql.owner.video_url;
+        instaObject.instagramText = graphql.edge_media_to_caption.edges[0].node.text;
+        instaObject.graphType = graphql.owner.__typename;
+        instaObject.date = computeHumanDate(graphql.taken_at_timestamp);
+        instaObject.likes = graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        instaObject.comments = graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        instaObject.verified = graphql.owner.is_verified;
+        this.set('_instaObject', instaObject);
         this.set('_loaded', true);
         this.dispatchEvent(new CustomEvent('test-event', {detail: "ready"}));
       })
       .catch((error) => {
         console.log("Fetch error", error);
       });
-    }
-    /**
-     * Builds a URL for links to post author's Instagram page
-     *
-     * @param {String} authorId of the post
-     * @return {String} URL of post author's page
-     */
-    _computeAuthorUrl(authorId) {
-      if (!authorId) return;
-      return 'https://www.instagram.com/' + authorId;
-    }
-    /**
-     * For time elapsed of less than 10 days, returns a "X days ago" String
-     * Else, returns the date in the format "Month DD, YYYY"
-     *
-     * @param {number} timestamp of the post
-     * @return {String} Human readable date
-     */
-    _computeHumanDate(timestamp) {
-      if (!timestamp) return;
-      const postDate = new Date(timestamp*1000);
-      const elapsedTime = new Date() - postDate;
-      const sevenDays = 1000*60*60*24*7;
-      if ( elapsedTime < sevenDays) {
-        return Math.round(elapsedTime/sevenDays) + " days ago"
-      } else {
-        var options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return postDate.toLocaleDateString("en-US",options)
-      }
-    }
-    /**
-     * Computes a URL required for the REST call to Instagram
-     *
-     * @param {String} postid of the
-     * @return {String} URL of the post
-     */
-    _computeUrl(postid) {
-      if (!postid) return;
-      return 'https://www.instagram.com/p/' + postid;
     }
     /**
      * Instagram provides either "GraphVideo" or "GraphImage"
