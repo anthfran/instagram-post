@@ -173,11 +173,11 @@
         </template>
         </span>
       </div>
-      <template id="templateImage" is="dom-if" if="{{!_isVideo(_instaObject.graphType)}}">
+      <template id="templateImage" is="dom-if" if="{{!_instaObject.graphType}}">
           <instagram-image id="elementImage" imageurls="[[_instaObject.imgSrc]]">
           </instagram-image>
       </template>
-      <template id="templateVideo" is="dom-if" if="{{_isVideo(_instaObject.graphType)}}">
+      <template id="templateVideo" is="dom-if" if="{{_instaObject.graphType}}">
         <instagram-video poster=[[_instaObject.imgSrc]] video=[[_instaObject.videoSrc]]>
         </instagram-video>
       </template>
@@ -247,6 +247,7 @@
         else return Promise.reject(response);
       })
       .then((json) => {
+        console.log(json);
         const graphql = json.graphql.shortcode_media;
         this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
 
@@ -278,7 +279,7 @@
         instaObject.postUrl = "https://www.instagram.com/p/".concat(postId);
         instaObject.videoSrc = graphql.owner.video_url;
         instaObject.instagramText = graphql.edge_media_to_caption.edges[0].node.text;
-        instaObject.graphType = graphql.owner.__typename;
+        instaObject.graphType = graphql.is_video;
         instaObject.date = computeHumanDate(graphql.taken_at_timestamp);
         instaObject.likes = graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         instaObject.comments = graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -290,20 +291,6 @@
       .catch((error) => {
         console.log("Fetch error", error);
       });
-    }
-    /**
-     * Instagram provides either "GraphVideo" or "GraphImage"
-     * This will convert to boolean, required by dom-if's on the page
-     *
-     * @param {String} graphType of the post
-     * @return {Boolean} True if Video, False if Image
-     */
-    _isVideo(graphType) {
-      if (!graphType) return;
-      if (graphType == 'GraphVideo')
-        return true;
-      else
-        return false;
     }
 
     connectedCallback() {
