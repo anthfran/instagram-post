@@ -277,9 +277,9 @@
         instaObject.authorId = graphql.owner.username;
         instaObject.authorUrl = "https://www.instagram.com/".concat(graphql.owner.username);
         instaObject.postUrl = "https://www.instagram.com/p/".concat(postId);
-        instaObject.videoSrc = graphql.owner.video_url;
         instaObject.instagramText = graphql.edge_media_to_caption.edges[0].node.text;
         instaObject.graphType = graphql.is_video;
+        if (graphql.is_video) instaObject.videoSrc = graphql.video_url;
         instaObject.date = computeHumanDate(graphql.taken_at_timestamp);
         instaObject.likes = graphql.edge_media_preview_like.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         instaObject.comments = graphql.edge_media_to_comment.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
