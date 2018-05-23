@@ -247,7 +247,6 @@
         else return Promise.reject(response);
       })
       .then((json) => {
-        console.log(json);
         const graphql = json.graphql.shortcode_media;
         this.$.instagramAvatar.src = graphql.owner.profile_pic_url;
 
